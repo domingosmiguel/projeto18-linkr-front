@@ -131,6 +131,7 @@ function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [pictureUrl, setPictureUrl] = useState('');
+  const [isAwating, setAwaiting] = useState(false);
   const navigate = useNavigate();
   function handleSignUp() {
     if (username.length < 3 || username.length > 40)
@@ -138,6 +139,7 @@ function SignUp() {
     if (password.length < 6 || password.length > 50)
       return alert('Password must have between 6 and 50 characters!');
     if (username && email && password && pictureUrl) {
+      setAwaiting(true);
       const promisse = axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/signup`,
         { username, email, password, pictureUrl }
@@ -146,9 +148,14 @@ function SignUp() {
         navigate('/');
       });
       promisse.catch((error) => {
-        alert(
-          `Erro: ${error.response.status}\nSomething went wrong, wait a while and try again or visit our FAQ and search for the presented error code!`
-        );
+        if (error.response.status === 400) {
+          alert('The e-mail entered is already registered!');
+        } else {
+          alert(
+            `Erro: ${error.response.status}\nSomething went wrong, wait a while and try again or visit our FAQ and search for the presented error code!`
+          );
+        }
+        setAwaiting(false);
       });
     } else {
       alert('All fields must be filled in!');
@@ -181,7 +188,9 @@ function SignUp() {
           placeholder="picture url"
           onChange={(event) => setPictureUrl(event.target.value)}
         ></input>
-        <button onClick={handleSignUp}>Sign Up</button>
+        <button onClick={handleSignUp} disabled={isAwating}>
+          Sign Up
+        </button>
         <Link to="/" relative="path">
           <h2>Switch back to log in</h2>
         </Link>
