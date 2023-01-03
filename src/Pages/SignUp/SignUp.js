@@ -133,6 +133,10 @@ function SignUp() {
   const [pictureUrl, setPictureUrl] = useState('');
   const navigate = useNavigate();
   function handleSignUp() {
+    if (username.length < 3 || username.length > 40)
+      return alert('Username must have between 3 and 40 characters!');
+    if (password.length < 6 || password.length > 50)
+      return alert('Password must have between 6 and 50 characters!');
     if (username && email && password && pictureUrl) {
       const promisse = axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/signup`,
@@ -165,6 +169,7 @@ function SignUp() {
           onChange={(event) => setEmail(event.target.value)}
         ></input>
         <input
+          type="password"
           placeholder="password"
           onChange={(event) => setPassword(event.target.value)}
         ></input>
