@@ -126,30 +126,25 @@ const Form = styled.div`
   }
 `;
 
-function SignUp() {
-  const [username, setUsername] = useState('');
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [pictureUrl, setPictureUrl] = useState('');
   const [isAwating, setAwaiting] = useState(false);
   const navigate = useNavigate();
-  function handleSignUp() {
-    if (username.length < 3 || username.length > 40)
-      return alert('Username must have between 3 and 40 characters!');
-    if (password.length < 6 || password.length > 50)
-      return alert('Password must have between 6 and 50 characters!');
-    if (username && email && password && pictureUrl) {
+  function handleLogin() {
+    if (email && password) {
       setAwaiting(true);
       const promisse = axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/signup`,
-        { username, email, password, pictureUrl }
+        `${process.env.REACT_APP_BACKEND_URL}/signin`,
+        { email, password }
       );
       promisse.then((response) => {
-        navigate('/');
+        localStorage.setItem('token', response.data);
+        navigate('/timeline');
       });
       promisse.catch((error) => {
-        if (error.response.status === 400) {
-          alert('The e-mail entered is already registered!');
+        if (error.response.status === 401) {
+          alert('Your e-mail and/or password must be wrong!');
         } else {
           alert(
             `Error: ${error.response.status}\nSomething went wrong, wait a while and try again or visit our FAQ and search for the presented error code!`
@@ -180,23 +175,15 @@ function SignUp() {
           placeholder="password"
           onChange={(event) => setPassword(event.target.value)}
         ></input>
-        <input
-          placeholder="username"
-          onChange={(event) => setUsername(event.target.value)}
-        ></input>
-        <input
-          placeholder="picture url"
-          onChange={(event) => setPictureUrl(event.target.value)}
-        ></input>
-        <button onClick={handleSignUp} disabled={isAwating}>
-          Sign Up
+        <button onClick={handleLogin} disabled={isAwating}>
+          Log In
         </button>
-        <Link to="/" relative="path">
-          <h2>Switch back to log in</h2>
+        <Link to="/sign-up" relative="path">
+          <h2>First time? Create an account!</h2>
         </Link>
       </Form>
     </Container>
   );
 }
 
-export default SignUp;
+export default Login;
