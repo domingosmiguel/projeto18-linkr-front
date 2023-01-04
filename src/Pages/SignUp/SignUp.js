@@ -152,7 +152,7 @@ function SignUp() {
           alert('The e-mail entered is already registered!');
         } else {
           alert(
-            `Erro: ${error.response.status}\nSomething went wrong, wait a while and try again or visit our FAQ and search for the presented error code!`
+            `Error: ${error.response.status}\nSomething went wrong, wait a while and try again or visit our FAQ and search for the presented error code!`
           );
         }
         setAwaiting(false);
