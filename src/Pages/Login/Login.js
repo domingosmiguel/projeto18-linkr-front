@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -131,6 +131,11 @@ function Login() {
   const [password, setPassword] = useState('');
   const [isAwating, setAwaiting] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.token) {
+      navigate('/timeline');
+    }
+  });
   function handleLogin() {
     if (email && password) {
       setAwaiting(true);
