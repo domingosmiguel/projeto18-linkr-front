@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import {AiOutlineHeart} from "react-icons/ai";
 
-export default function BoxPost() {
+export default function BoxPost({post}) {
+   
     return (
 
         <Post>
@@ -11,8 +12,8 @@ export default function BoxPost() {
             </ImageProfile>
             <PostContent>
                 <span>User Name</span>
-                <Text>Muito maneiro esse tutorial de Material UI com React, deem uma olhada! #react #material</Text>
-                <Url>Preview url</Url>
+                <Text>{post.txt}</Text>
+                <Url><a href={post.link}>{post.link}</a></Url>
             </PostContent>
         </Post>
 
@@ -32,6 +33,12 @@ export const Post = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
+    @media (max-width: 974px){
+        width: 100%;
+        border-radius: 0;
+
+    }
 `
 export const ImageProfile = styled.div`
     width: 50px;

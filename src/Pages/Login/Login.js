@@ -1,7 +1,9 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+//Dados user provisórios por context 
+import { DadosContext } from '../../context/DadosContext';
 
 const Container = styled.div`
   width: 100%;
@@ -127,6 +129,9 @@ const Form = styled.div`
 `;
 
 function Login() {
+  //Dados do user por context
+  const {setUserName, setUserImg,} = useContext(DadosContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isAwating, setAwaiting] = useState(false);
@@ -140,6 +145,9 @@ function Login() {
       );
       promisse.then((response) => {
         localStorage.setItem('token', response.data);
+        console.log(response.data.user.username)
+        setUserName(response.data.user.username)
+        setUserImg(response.data.user.pictureUrl)
         navigate('/timeline');
       });
       promisse.catch((error) => {
