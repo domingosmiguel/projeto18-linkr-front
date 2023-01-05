@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+//Dados user
+import { DadosContext } from '../context/DadosContext';
 
 const Container = styled.div`
   position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -74,7 +79,9 @@ const Logo = styled.h1`
   }
 `;
 
-export default function Header({ user }) {
+export default function Header() {
+  const { userImg, setUserImg } = useContext(DadosContext);
+
   const [isOpen, setOpen] = useState(false);
   const navigate = useNavigate();
   function handleLogout() {}
@@ -88,7 +95,7 @@ export default function Header({ user }) {
             onClick={() => setOpen(!isOpen)}
           ></ion-icon>
           <img
-            src={user.pictureUrl}
+            src={userImg}
             alt="user"
             width="53px"
             height="53px"

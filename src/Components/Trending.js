@@ -23,6 +23,10 @@ const ContainerTrending = styled.div`
     position: absolute;
     top: 160px;
     right: 0;
+    @media (max-width: 974px){
+        display: none;
+
+    }
 `
 const TittleTrending = styled.span`
     display: block;

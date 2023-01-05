@@ -21,6 +21,9 @@ justify-content: center;
 align-items: center;
 position: relative;
 /* background-color: pink; */
+@media (max-width: 974px){
+        width: 100%;
+    }
 `
 export const ContainerPosts = styled.div`
 width: 611px;
@@ -29,20 +32,28 @@ position: relative;
 position: absolute;
 left: 0;
 top: 0;
+@media (max-width: 974px){
+        width: 100%;
+        margin: 0 auto;
+    }
 `
 export const TittlePosts = styled.div`
 width: 145px;
 height: 64px;
 margin-top: 53px;
-/* position: absolute;
-top: 53px;
-left: 0; */
 font-family: 'Oswald', sans-serif;
 font-style: normal;
 font-weight: 700;
 font-size: 43px;
 line-height: 64px;
 color: #FFFFFF;
+
+@media (max-width: 974px){
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 10px;
+
+    }
 `
 export const BoxInputs = styled.div`
     box-sizing: border-box;
@@ -57,6 +68,12 @@ export const BoxInputs = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
+
+    @media (max-width: 974px){
+        width: 100%;
+        border-radius: 0;
+
+    }
 `
 export const Image = styled.div`
 width: 20px;
