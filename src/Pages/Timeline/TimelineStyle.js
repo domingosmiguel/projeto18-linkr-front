@@ -126,6 +126,10 @@ color: #949494;
     line-height: 18px;
     color: #949494;
 }
+&:disabled{
+    background-color: #b5b5b5;
+    color: #000000;
+}
 
 `
 export const InputText = styled.input`
@@ -154,6 +158,10 @@ position: relative;
     left: 10px;
     top: 10px;
 }
+&:disabled{
+    background-color: #b5b5b5;
+    color: #000000;
+}
 `
 export const ButtonPost = styled.button`
 width: 112px;
@@ -173,4 +181,16 @@ font-weight: 700;
 font-size: 14px;
 line-height: 17px;
 color: #FFFFFF;
+
+&:disabled{
+    background-color: #b5b5b5;
+    color: #000000;
+}
+
+&:hover {
+    background: #001c3f;
+    &:disabled{
+        background: #1877F2;
+    }
+}
 `

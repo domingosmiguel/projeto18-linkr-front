@@ -12,14 +12,15 @@ import BoxPost from "../../Components/BoxPost";
 import Trending from "../../Components/Trending";
 
 export default function TimelinePage() {
-    const { posts, setPosts,  linkPost, setLinkPost, textPost, setTextPost } = useContext(DadosContext);
+    const { posts, setPosts, linkPost, setLinkPost, textPost, setTextPost, disabled, setDisabled } = useContext(DadosContext);
+    
+    // const config = {
+    //     headers: {
+    //         "Authorization": `Bearer ${token}`
+    //     }
+    // }
 
     useEffect(() => {
-        // const config = {
-        //     headers: {
-        //         "Authorization": `Bearer ${token}`
-        //     }
-        // }
 
         axios.get("http://localhost:4000/timeline-posts")
             .then((res) => {
@@ -30,34 +31,35 @@ export default function TimelinePage() {
             })
     }, [])
 
-    function publishPost(event){
-        event.preventDefault()
-        // const config = {
-        //     headers: {
-        //         "Authorization": `Bearer ${token}`
-        //     }
-        // }
-
-        const body = {texto: textPost, link: linkPost}
-
+    function publishPost(event) {
+        event.preventDefault();
+        setDisabled(true);
+        const body = { texto: textPost, link: linkPost };
         axios.post("http://localhost:4000/timeline-posts", body)
-        .then((res)=>{
-            console.log(res.data)
-            atualizarTimeline()
-        })
-        .catch((err)=>{
-            console.log(err.response.data)
-        })
+            .then((res) => {
+                console.log(res.data)
+                atualizarTimeline()
+                setDisabled(false)
+                setLinkPost("")
+                setTextPost("")
+            })
+            .catch((err) => {
+                console.log(err.response.data);
+                alert("Houve um erro ao publicar seu link");
+                setDisabled(false)
+                setLinkPost("")
+                setTextPost("")
+            })
     }
 
-    function atualizarTimeline(){
+    function atualizarTimeline() {
         axios.get("http://localhost:4000/timeline-posts")
-        .then((res) => {
-            setPosts(res.data);
-        })
-        .catch((err) => {
-            console.log(err.response.data)
-        })
+            .then((res) => {
+                setPosts(res.data);
+            })
+            .catch((err) => {
+                console.log(err.response.data)
+            })
     }
 
     return (
@@ -72,17 +74,23 @@ export default function TimelinePage() {
                             <ContainerInputs>
                                 <span>What are you going to share today?</span>
                                 <InputLink
+                                    disabled={disabled}
                                     placeholder="http://..."
                                     onChange={e => setLinkPost(e.target.value)}
                                     value={linkPost}
                                     type="url"
                                     required />
                                 <InputText
+                                    disabled={disabled}
                                     placeholder="Talk about your link"
                                     onChange={e => setTextPost(e.target.value)}
                                     value={textPost}
                                     type="text" />
-                                <ButtonPost type="submit">Publish</ButtonPost>
+                                <ButtonPost
+                                    type="submit"
+                                    disabled={disabled}>
+                                    {disabled===false? "Publish":"Publishing"}
+                                </ButtonPost>
                             </ContainerInputs>
                         </BoxInputs>
                     </form>
@@ -92,6 +100,5 @@ export default function TimelinePage() {
                 <Trending />
             </ContainerPostsAndTrending>
         </ContainerTimeline>
-
     )
 }

@@ -8,6 +8,7 @@ export default function ContextProvider({ children }) {
     const [posts, setPosts] = useState("")
     const [linkPost, setLinkPost] = useState("")
     const [textPost, setTextPost] = useState("")
+    const [disabled, setDisabled] = useState(false)
 
     return (
         <DadosContext.Provider value={{
@@ -15,7 +16,8 @@ export default function ContextProvider({ children }) {
             userImg, setUserImg,
             posts, setPosts,
             linkPost, setLinkPost,
-            textPost, setTextPost
+            textPost, setTextPost,
+            disabled, setDisabled
         }}>
             {children}
         </DadosContext.Provider>
