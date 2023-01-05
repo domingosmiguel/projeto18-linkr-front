@@ -1,8 +1,7 @@
-import { useState, useContext } from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-//Dados user
-import { DadosContext } from '../context/DadosContext';
 
 const Container = styled.div`
   position: fixed;
@@ -38,6 +37,9 @@ const Main = styled.div`
   display: flex;
   align-items: center;
   padding-right: 18px;
+  img {
+    border-radius: 50%;
+  }
 `;
 
 const Logout = styled.div`
@@ -79,12 +81,30 @@ const Logo = styled.h1`
   }
 `;
 
-export default function Header() {
-  const { userImg, setUserImg } = useContext(DadosContext);
-
+export default function Header({ user, sessionId }) {
   const [isOpen, setOpen] = useState(false);
   const navigate = useNavigate();
-  function handleLogout() {}
+  function handleLogout() {
+    const config = {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    };
+    const promisse = axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/logout`,
+      { sessionId, userId: user.id },
+      config
+    );
+    promisse.then((response) => {
+      localStorage.clear();
+      navigate('/');
+    });
+    promisse.catch((error) => {
+      alert(
+        `Error: ${error.response.status}\n Something went wrong, try again later!`
+      );
+    });
+  }
   return (
     <Container>
       <Logo onClick={() => navigate('/timeline')}>Linkr</Logo>
@@ -94,13 +114,7 @@ export default function Header() {
             name={isOpen ? 'chevron-up-sharp' : 'chevron-down-sharp'}
             onClick={() => setOpen(!isOpen)}
           ></ion-icon>
-          <img
-            src={userImg}
-            alt="user"
-            width="53px"
-            height="53px"
-            borderradius="50%"
-          />
+          <img src={user.pictureUrl} alt="user" width="53px" height="53px" />
         </Main>
         <Logout isOpen={isOpen}>
           <button onClick={handleLogout}>Logout</button>
