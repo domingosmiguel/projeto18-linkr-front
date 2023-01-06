@@ -21,6 +21,8 @@ const Container = styled.div`
 const User = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: ${(props) => (props.isOpen ? 'flex-start' : 'center')};
+  margin-top: ${(props) => (props.isOpen ? '20px' : '0')};
   height: 100%;
   overflow-y: visible;
   ion-icon {
@@ -108,7 +110,7 @@ export default function Header({ user, sessionId }) {
   return (
     <Container>
       <Logo onClick={() => navigate('/timeline')}>Linkr</Logo>
-      <User>
+      <User isOpen={isOpen}>
         <Main>
           <ion-icon
             name={isOpen ? 'chevron-up-sharp' : 'chevron-down-sharp'}

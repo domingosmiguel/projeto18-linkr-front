@@ -3,7 +3,8 @@ import './Assets/reset.css';
 import Login from './Pages/Login/Login';
 import SignUp from './Pages/SignUp/SignUp';
 import TimelinePage from './Pages/Timeline/TimelinePage';
-import ContextProvider from "./context/DadosContext";
+import ContextProvider from './context/DadosContext';
+import Hashtag from './Pages/Hashtag/Hashtag';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/timeline" element={<TimelinePage />} />
+          <Route path="/hashtag/:hashtag" element={<Hashtag />} />
         </Routes>
       </BrowserRouter>
     </ContextProvider>
