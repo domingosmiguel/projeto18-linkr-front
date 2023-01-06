@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { AiOutlineHeart } from 'react-icons/ai';
 import Linkify from 'linkify-react';
 import 'linkify-plugin-hashtag';
+import { ReactTinyLink } from 'react-tiny-link';
 
 export default function BoxPost({ post }) {
   const options = {
@@ -24,7 +25,13 @@ export default function BoxPost({ post }) {
           <Linkify options={options}>{post.txt}</Linkify>
         </Text>
         <Url>
-          <a href={post.link}>{post.link}</a>
+          <ReactTinyLink
+            cardSize="small"
+            showGraphic={true}
+            maxLine={2}
+            minLine={1}
+            url={post.link}
+          />
         </Url>
       </PostContent>
     </Post>
@@ -116,9 +123,8 @@ export const Text = styled.div`
 `;
 export const Url = styled.div`
   width: 503px;
-  height: 155px;
   border: 1px solid #4d4d4d;
-  border-radius: 11px;
+  border-radius: 14px;
 
   font-family: 'Lato';
   font-style: normal;
