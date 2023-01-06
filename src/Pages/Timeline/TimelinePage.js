@@ -100,10 +100,7 @@ export default function TimelinePage() {
           <form onSubmit={publishPost}>
             <BoxInputs>
               <Image>
-                <img
-                  src="https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782__340.jpg"
-                  alt="profile"
-                />
+                <img src={user.pictureUrl} alt="profile" />
               </Image>
               <ContainerInputs>
                 <span>What are you going to share today?</span>
