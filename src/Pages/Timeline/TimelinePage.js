@@ -112,7 +112,7 @@ export default function TimelinePage() {
                 }
             });
     }
-
+    
     return (
         <ContainerTimeline>
             <Header user={user} sessionId={sessionId} />
@@ -151,7 +151,7 @@ export default function TimelinePage() {
                         ? <Loading/>
                         : posts.length === 0
                             ? <NoPosts/>
-                            : posts.map((p, idx) => <BoxPost post={p} key={idx} />)}
+                            : posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)}
                 </ContainerPosts>
                 <Trending hashtags={hashtags} />
             </ContainerPostsAndTrending>
