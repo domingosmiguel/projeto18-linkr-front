@@ -31,12 +31,6 @@ export default function TimelinePage() {
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
 
-  // const config = {
-  //     headers: {
-  //         "Authorization": `Bearer ${token}`
-  //     }
-  // }
-
   useEffect(() => {
     const config = {
       headers: {
