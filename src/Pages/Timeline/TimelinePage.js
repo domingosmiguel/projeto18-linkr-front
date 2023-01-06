@@ -52,7 +52,8 @@ export default function TimelinePage() {
   function publishPost(event) {
     event.preventDefault();
     setDisabled(true);
-    const body = { texto: textPost, link: linkPost };
+    const hashtags = textPost.split(' ').filter((elem) => elem.startsWith('#'));
+    const body = { texto: textPost, link: linkPost, hashtags };
     axios
       .post('http://localhost:4000/timeline-posts', body)
       .then((res) => {
