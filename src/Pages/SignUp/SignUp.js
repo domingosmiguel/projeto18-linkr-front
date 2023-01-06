@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -133,6 +133,11 @@ function SignUp() {
   const [pictureUrl, setPictureUrl] = useState('');
   const [isAwating, setAwaiting] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.token) {
+      navigate('/timeline');
+    }
+  });
   function handleSignUp() {
     if (username.length < 3 || username.length > 40)
       return alert('Username must have between 3 and 40 characters!');
