@@ -78,6 +78,7 @@ export default function TimelinePage() {
       .get('http://localhost:4000/timeline-posts', config)
       .then((res) => {
         setPosts(res.data.posts);
+        setHashtags(res.data.hashtags);
       })
       .catch((err) => {
         console.log(err.response.data);
