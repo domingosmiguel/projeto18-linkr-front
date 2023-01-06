@@ -12,17 +12,14 @@ export default function BoxPost({ post }) {
   return (
     <Post>
       <ImageProfile>
-        <img
-          src="https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782__340.jpg"
-          alt="profile"
-        />
+        <img src={post.pictureUrl} alt="profile" />
         <div>
           <AiOutlineHeart />
           <p>0 Likes</p>
         </div>
       </ImageProfile>
       <PostContent>
-        <span>User Name</span>
+        <span>{post.username}</span>
         <Text>
           <Linkify options={options}>{post.txt}</Linkify>
         </Text>
