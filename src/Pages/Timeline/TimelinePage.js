@@ -30,6 +30,7 @@ export default function TimelinePage() {
   } = useContext(DadosContext);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
+  const [hashtags, setHashtags] = useState([]);
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -43,6 +44,7 @@ export default function TimelinePage() {
         setUser(res.data.user);
         setSessionId(res.data.sessionId);
         setPosts(res.data.posts);
+        setHashtags(res.data.hashtags);
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -123,9 +125,9 @@ export default function TimelinePage() {
             ? 'Carregando'
             : posts.length === 0
             ? 'There are no posts yet'
-            : posts.map((p) => <BoxPost post={p} />)}
+            : posts.map((p, idx) => <BoxPost post={p} key={idx} />)}
         </ContainerPosts>
-        <Trending />
+        <Trending hashtags={hashtags} />
       </ContainerPostsAndTrending>
     </ContainerTimeline>
   );
