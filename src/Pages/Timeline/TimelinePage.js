@@ -16,6 +16,7 @@ import {
 } from './TimelineStyle';
 import BoxPost from '../../Components/BoxPost';
 import Trending from '../../Components/Trending';
+import { useNavigate } from 'react-router-dom';
 
 export default function TimelinePage() {
   const {
@@ -36,6 +37,7 @@ export default function TimelinePage() {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
     },
   };
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -48,6 +50,10 @@ export default function TimelinePage() {
       })
       .catch((err) => {
         console.log(err.response.data);
+        if (err.response.status === 401) {
+          localStorage.clear();
+          navigate('/');
+        }
       });
   }, []);
 
