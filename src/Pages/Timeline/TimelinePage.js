@@ -18,6 +18,7 @@ import BoxPost from '../../Components/BoxPost';
 import Trending from '../../Components/Trending';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../../Components/Loading";
+import NoPosts from '../../Components/NoPosts';
 
 export default function TimelinePage() {
     const {
@@ -149,7 +150,7 @@ export default function TimelinePage() {
                     {posts === ''
                         ? <Loading/>
                         : posts.length === 0
-                            ? 'There are no posts yet'
+                            ? <NoPosts/>
                             : posts.map((p, idx) => <BoxPost post={p} key={idx} />)}
                 </ContainerPosts>
                 <Trending hashtags={hashtags} />
