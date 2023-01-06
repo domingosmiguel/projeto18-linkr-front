@@ -30,13 +30,13 @@ export default function TimelinePage() {
   } = useContext(DadosContext);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
+  const config = {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
+  };
 
   useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
     axios
       .get('http://localhost:4000/timeline-posts', config)
       .then((res) => {
@@ -55,13 +55,12 @@ export default function TimelinePage() {
     const hashtags = textPost.split(' ').filter((elem) => elem.startsWith('#'));
     const body = { texto: textPost, link: linkPost, hashtags };
     axios
-      .post('http://localhost:4000/timeline-posts', body)
+      .post('http://localhost:4000/timeline-posts', body, config)
       .then((res) => {
-        console.log(res.data);
-        atualizarTimeline();
         setDisabled(false);
         setLinkPost('');
         setTextPost('');
+        atualizarTimeline();
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -74,9 +73,9 @@ export default function TimelinePage() {
 
   function atualizarTimeline() {
     axios
-      .get('http://localhost:4000/timeline-posts')
+      .get('http://localhost:4000/timeline-posts', config)
       .then((res) => {
-        setPosts(res.data);
+        setPosts(res.data.posts);
       })
       .catch((err) => {
         console.log(err.response.data);
