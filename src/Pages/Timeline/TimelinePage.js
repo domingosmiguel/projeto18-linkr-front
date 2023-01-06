@@ -49,10 +49,13 @@ export default function TimelinePage() {
         setHashtags(res.data.hashtags);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err.response.status);
         if (err.response.status === 401) {
           localStorage.clear();
           navigate('/');
+        }
+        if(err.response.status===500){
+            alert("An error occured while trying to fetch the posts, please refresh the page");
         }
       });
   }, []);
@@ -71,7 +74,7 @@ export default function TimelinePage() {
         atualizarTimeline();
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err.response.status);
         alert('Houve um erro ao publicar seu link');
         setDisabled(false);
         setLinkPost('');
@@ -87,7 +90,8 @@ export default function TimelinePage() {
         setHashtags(res.data.hashtags);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err.response.status);
+        alert("An error occured while trying to fetch the posts, please refresh the page")
       });
   }
 
