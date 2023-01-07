@@ -19,6 +19,7 @@ import Trending from '../../Components/Trending';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../../Components/Loading";
 import NoPosts from '../../Components/NoPosts';
+import ModalDelete from '../../Components/Modal';
 
 export default function TimelinePage() {
     const {
@@ -147,6 +148,7 @@ export default function TimelinePage() {
                             </ContainerInputs>
                         </BoxInputs>
                     </form>
+                    <ModalDelete/>
                     {posts === ''
                         ? <Loading/>
                         : posts.length === 0

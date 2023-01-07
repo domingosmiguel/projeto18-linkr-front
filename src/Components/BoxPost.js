@@ -15,33 +15,11 @@ export default function BoxPost({ post, user }) {
     },
   };
 
-  const { setPosts } = useContext(DadosContext);
+  const { setIsOpen, setId } = useContext(DadosContext);
 
-  function deletePOst(id) {
-    const responseDelete = window.confirm("Do you really want to delete this post?");
-    if (responseDelete === true) {
-      const config = {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      };
-
-      axios.delete(`http://localhost:4000/user-posts/${id}`, config)
-        .then((res) => {
-          console.log(res.data)
-          alert("Successfully Deleted Item");
-          axios.get("http://localhost:4000/timeline-posts", config)
-            .then((response) => {
-              setPosts(response.data.posts);
-            })
-            .catch((error) => {
-              console.log(error.response)
-            })
-        })
-        .catch((err) => {
-          console.log(err.response);
-        })
-    }
+  function openModal(postId){
+    setId(postId)
+    setIsOpen(true)
   }
 
   return (
@@ -58,7 +36,7 @@ export default function BoxPost({ post, user }) {
           <span>{post.username}</span>
           {user.id===post.userId? <BoxIcons>
             <HiPencilAlt />
-            <HiTrash onClick={() => deletePOst(post.id)} />
+            <HiTrash onClick={() => openModal(post.id)} />
           </BoxIcons>:""}
         </BoxNameIcons>
         <Text>
