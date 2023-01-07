@@ -33,7 +33,7 @@ export default function ModalDelete() {
     }
 
     function deletePost(id) {
-        setDisabledModal(false)
+        setDisabledModal(true)
 
         const config = {
             headers: {
