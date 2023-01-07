@@ -2,14 +2,26 @@ import styled from 'styled-components';
 import { AiOutlineHeart } from 'react-icons/ai';
 import Linkify from 'linkify-react';
 import 'linkify-plugin-hashtag';
-import { ReactTinyLink } from 'react-tiny-link';
+import { ReactTinyLink } from "react-tiny-link";
+import { HiPencilAlt, HiTrash } from "react-icons/hi";
+import axios from 'axios';
+import { useContext } from "react";
+import { DadosContext } from '../context/DadosContext';
 
-export default function BoxPost({ post }) {
+export default function BoxPost({ post, user }) {
   const options = {
     formatHref: {
       hashtag: (href) => '/hashtag/' + href.substr(1),
     },
   };
+
+  const { setIsOpen, setId } = useContext(DadosContext);
+
+  function openModal(postId){
+    setId(postId)
+    setIsOpen(true)
+  }
+
   return (
     <Post>
       <ImageProfile>
@@ -20,7 +32,13 @@ export default function BoxPost({ post }) {
         </div>
       </ImageProfile>
       <PostContent>
-        <span>{post.username}</span>
+        <BoxNameIcons>
+          <span>{post.username}</span>
+          {user.id===post.userId? <BoxIcons>
+            <HiPencilAlt />
+            <HiTrash onClick={() => openModal(post.id)} />
+          </BoxIcons>:""}
+        </BoxNameIcons>
         <Text>
           <Linkify options={options}>{post.txt}</Linkify>
         </Text>
@@ -38,7 +56,7 @@ export default function BoxPost({ post }) {
   );
 }
 
-export const Post = styled.div`
+const Post = styled.div`
   box-sizing: border-box;
   padding: 18px 18px;
   width: 611px;
@@ -54,8 +72,8 @@ export const Post = styled.div`
     width: 100%;
     border-radius: 0;
   }
-`;
-export const ImageProfile = styled.div`
+`
+const ImageProfile = styled.div`
   width: 50px;
   img {
     width: 50px;
@@ -84,8 +102,8 @@ export const ImageProfile = styled.div`
     text-align: center;
     color: #ffffff;
   }
-`;
-export const PostContent = styled.div`
+`
+const PostContent = styled.div`
   width: 510px;
   height: 100%;
   box-sizing: border-box;
@@ -94,20 +112,9 @@ export const PostContent = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  span {
-    width: 502px;
-    height: 23px;
-    left: 327px;
-    top: 489px;
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19px;
-    line-height: 23px;
-    color: #ffffff;
-  }
-`;
-export const Text = styled.div`
+ 
+`
+const Text = styled.div`
   border-radius: 16px;
 
   font-family: 'Lato';
@@ -120,8 +127,8 @@ export const Text = styled.div`
     text-decoration: none;
     color: white;
   }
-`;
-export const Url = styled.div`
+`
+const Url = styled.div`
   width: 503px;
   border: 1px solid #4d4d4d;
   border-radius: 14px;
@@ -132,4 +139,36 @@ export const Url = styled.div`
   font-size: 16px;
   line-height: 19px;
   color: #cecece;
-`;
+`
+const BoxNameIcons = styled.div`
+  width: 502px;
+  height: 23px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+ span {
+    width:50%;
+    height: 23px;
+    left: 327px;
+    top: 489px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 23px;
+    color: #ffffff;
+    cursor: pointer;
+  }
+`
+const BoxIcons = styled.div`
+  width: 30%;
+  height: 23px;
+  display: flex;
+  justify-content: right;
+  svg{
+    font-size: 20px;
+    color: #FFFFFF;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+`

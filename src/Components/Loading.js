@@ -1,20 +1,19 @@
 import styled from "styled-components";
-import { ThreeDots } from  'react-loader-spinner';
+import { ProgressBar } from  'react-loader-spinner';
 
 export default function Loading(){
     return(
         <BoxLading>
             <p>Loading</p>
-            <ThreeDots 
-                        height="150" 
-                        width="200" 
-                        radius="9"
-                        color=" #ffffff" 
-                        ariaLabel="three-dots-loading"
-                        wrapperStyle={{}}
-                        wrapperClassName=""
-                        visible={true}
-                         />
+            <ProgressBar
+                height="150"
+                width="150"
+                ariaLabel="progress-bar-loading"
+                wrapperStyle={{}}
+                wrapperClass="progress-bar-wrapper"
+                borderColor = '#FFFFFF'
+                barColor = '#1877f2'
+                />
         </BoxLading>
     )
 }
@@ -29,9 +28,9 @@ const BoxLading = styled.div`
     justify-content: flex-start;
     align-items: center;
 
-    font-family: 'Seymour One', sans-serif;
+    font-family: 'Lato';
     font-weight: 700;
-    font-size: 40px;
+    font-size: 30px;
     line-height: 17px;
     color: #ffffff;
 `
