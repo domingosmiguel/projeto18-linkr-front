@@ -98,7 +98,7 @@ export default function Hashtag() {
             ? 'Loading'
             : posts.length === 0
             ? 'There are no posts yet'
-            : posts.map((p, idx) => <BoxPost post={p} key={idx} />)}
+            : posts.map((p, idx) => <BoxPost post={p} key={idx} user={user} />)}
         </ContainerPosts>
         <Trending hashtags={hashtags} />
       </ContainerPostsAndTrending>
