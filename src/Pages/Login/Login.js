@@ -139,20 +139,20 @@ function Login() {
   function handleLogin() {
     if (email && password) {
       setAwaiting(true);
-      const promisse = axios.post(
+      const promise = axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/signin`,
         { email, password }
       );
-      promisse.then((response) => {
+      promise.then((response) => {
         localStorage.setItem('token', response.data);
         navigate('/timeline');
       });
-      promisse.catch((error) => {
-        if (error.response.status === 401) {
+      promise.catch((error) => {
+        if (error.response?.status === 401) {
           alert('Your e-mail and/or password must be wrong!');
         } else {
           alert(
-            `Error: ${error.response.status}\nSomething went wrong, wait a while and try again or visit our FAQ and search for the presented error code!`
+            `Error: ${error.response?.status}\nSomething went wrong, wait a while and try again or visit our FAQ and search for the presented error code!`
           );
         }
         setAwaiting(false);
@@ -172,18 +172,18 @@ function Login() {
       </CompanyInfo>
       <Form>
         <input
-          placeholder="e-mail"
+          placeholder='e-mail'
           onChange={(event) => setEmail(event.target.value)}
         ></input>
         <input
-          type="password"
-          placeholder="password"
+          type='password'
+          placeholder='password'
           onChange={(event) => setPassword(event.target.value)}
         ></input>
         <button onClick={handleLogin} disabled={isAwating}>
           Log In
         </button>
-        <Link to="/sign-up" relative="path">
+        <Link to='/sign-up' relative='path'>
           <h2>First time? Create an account!</h2>
         </Link>
       </Form>
