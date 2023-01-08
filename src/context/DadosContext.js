@@ -25,7 +25,7 @@ export default function ContextProvider({ children }) {
             modalIsOpen, setIsOpen,
             id, setId,
             visible, setVisible,
-            disabledModal, setDisabledModal 
+            disabledModal, setDisabledModal
         }}>
             {children}
         </DadosContext.Provider>

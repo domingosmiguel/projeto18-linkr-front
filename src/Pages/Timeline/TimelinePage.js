@@ -152,7 +152,7 @@ export default function TimelinePage() {
                     {posts === ''
                         ? <Loading/>
                         : posts.length === 0
-                            ? <NoPosts/>
+                            ? "There are no posts yet"
                             : posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)}
                 </ContainerPosts>
                 <Trending hashtags={hashtags} />

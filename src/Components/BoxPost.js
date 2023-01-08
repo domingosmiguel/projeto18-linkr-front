@@ -4,20 +4,38 @@ import Linkify from 'linkify-react';
 import 'linkify-plugin-hashtag';
 import { ReactTinyLink } from "react-tiny-link";
 import { HiPencilAlt, HiTrash } from "react-icons/hi";
-import axios from 'axios';
-import { useContext } from "react";
+// import axios from 'axios';
+import { useContext, useRef, useEffect, useState } from "react";
 import { DadosContext } from '../context/DadosContext';
+import { Link } from 'react-router-dom';
 
 export default function BoxPost({ post, user }) {
+  const { 
+    setIsOpen,
+    setId } = useContext(DadosContext);
+  const inputRef = useRef(null);
+  const [editing, setEditing] = useState(false);
+  const [idEdition, setIdEdition] = useState("");
+  const [ textEdited, setTextEdited] = useState(post.txt);
+
+  function makeEdition(id) {
+    setEditing(!editing)
+    setIdEdition(id)
+  }
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
+
   const options = {
     formatHref: {
       hashtag: (href) => '/hashtag/' + href.substr(1),
     },
   };
 
-  const { setIsOpen, setId } = useContext(DadosContext);
-
-  function openModal(postId){
+  function openModal(postId) {
     setId(postId)
     setIsOpen(true)
   }
@@ -33,15 +51,30 @@ export default function BoxPost({ post, user }) {
       </ImageProfile>
       <PostContent>
         <BoxNameIcons>
-          <span>{post.username}</span>
-          {user.id===post.userId? <BoxIcons>
-            <HiPencilAlt />
+          <Link to={`/user/${post.userId}`}><span>{post.username}</span></Link>
+          {user.id === post.userId ? <BoxIcons>
+            <HiPencilAlt onClick={() => makeEdition(post.id)} />
             <HiTrash onClick={() => openModal(post.id)} />
-          </BoxIcons>:""}
+          </BoxIcons> : ""}
         </BoxNameIcons>
-        <Text>
-          <Linkify options={options}>{post.txt}</Linkify>
-        </Text>
+        {idEdition === post.id ?
+          editing === true ?
+            <InputEdition
+              ref={inputRef}
+              // disabled={disabled}
+              // placeholder="Talk about your link"
+              onChange={(e) => setTextEdited(e.target.value)}
+              value={textEdited}
+              type="text"
+            />
+            :
+            <Text>
+              <Linkify options={options}>{post.txt}</Linkify>
+            </Text>
+          :
+          <Text>
+            <Linkify options={options}>{post.txt}</Linkify>
+          </Text>}
         <Url>
           <ReactTinyLink
             cardSize="small"
@@ -67,6 +100,10 @@ const Post = styled.div`
   border-radius: 16px;
   display: flex;
   justify-content: space-between;
+
+  a{
+    text-decoration: none;
+  }
 
   @media (max-width: 974px) {
     width: 100%;
@@ -171,4 +208,8 @@ const BoxIcons = styled.div`
     margin-left: 10px;
     cursor: pointer;
   }
+`
+const InputEdition = styled.input`
+width: 97%;
+height: 40px;
 `
