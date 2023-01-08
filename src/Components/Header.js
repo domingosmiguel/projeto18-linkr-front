@@ -46,7 +46,7 @@ export default function Header({ user, sessionId }) {
           value={data.search}
         />
         {users.map((user) => (
-          <UserCard user={user} />
+          <UserCard key={user.id} user={user} />
         ))}
       </SearchResults>
       <User isOpen={isOpen}>
