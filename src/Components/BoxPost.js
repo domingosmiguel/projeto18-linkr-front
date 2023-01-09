@@ -244,6 +244,7 @@ const Post = styled.div`
   @media (max-width: 974px) {
     width: 100%;
     border-radius: 0;
+    padding: 15px;
   }
 `;
 
@@ -267,6 +268,10 @@ const ImageProfile = styled.div`
       font-size: 20px;
       cursor: pointer;
     }
+    @media (max-width: 974px) {
+    width: 60%;
+    height: 60px;
+  }
   }
   p {
     font-family: 'Lato';
@@ -276,6 +281,10 @@ const ImageProfile = styled.div`
     line-height: 13px;
     text-align: center;
     color: #ffffff;
+  }
+
+  @media (max-width: 974px) {
+    width: 20%;
   }
 `;
 const PostContent = styled.div`
@@ -287,6 +296,10 @@ const PostContent = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+
+  @media (max-width: 974px) {
+    width: 80%;
+  }
 `;
 const Text = styled.div`
   border-radius: 16px;
@@ -301,6 +314,10 @@ const Text = styled.div`
     text-decoration: none;
     color: white;
   }
+
+  @media (max-width: 974px) {
+    width: 98%;
+  }
 `;
 const Url = styled.div`
   width: 503px;
@@ -313,6 +330,10 @@ const Url = styled.div`
   font-size: 16px;
   line-height: 19px;
   color: #cecece;
+
+  @media (max-width: 974px) {
+    width: 98%;
+  }
 `;
 const BoxNameIcons = styled.div`
   width: 502px;
@@ -332,6 +353,9 @@ const BoxNameIcons = styled.div`
     line-height: 23px;
     color: #ffffff;
     cursor: pointer;
+  }
+  @media (max-width: 974px) {
+    width: 98%;
   }
 `;
 const BoxIcons = styled.div`

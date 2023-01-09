@@ -44,6 +44,10 @@ export const ContainerImgNameUser = styled.div`
   justify-content: flex-start;
   align-items: center;
   text-align: center;
+
+  @media (max-width: 974px) {
+    width: 100%;
+  }
 `;
 export const TittlePosts = styled.div`
   font-family: 'Oswald', sans-serif;
