@@ -353,6 +353,7 @@ const Url = styled.div`
   border: 1px solid #4d4d4d;
   border-radius: 14px;
   display: flex;
+  justify-content: space-between;
   img {
     width: 155px;
     height: auto;
