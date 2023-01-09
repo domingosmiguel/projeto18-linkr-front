@@ -201,6 +201,7 @@ export const ButtonPost = styled.button`
   &:disabled {
     background-color: #b5b5b5;
     color: #000000;
+    cursor: not-allowed;
   }
 
   &:hover {
