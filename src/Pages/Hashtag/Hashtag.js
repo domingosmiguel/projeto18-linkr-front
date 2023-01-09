@@ -87,7 +87,7 @@ export default function Hashtag() {
           navigate('/');
         }
       });
-  });
+  }, []);
 
   return (
     <ContainerTimeline>
