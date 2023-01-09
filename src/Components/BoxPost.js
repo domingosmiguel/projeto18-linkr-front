@@ -17,9 +17,9 @@ export default function BoxPost({ post, user }) {
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
-  
+
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
-  
+
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -352,6 +352,7 @@ const Url = styled.div`
   border: 1px solid #4d4d4d;
   border-radius: 14px;
   display: flex;
+  justify-content: space-between;
   img {
     width: 155px;
     height: auto;
