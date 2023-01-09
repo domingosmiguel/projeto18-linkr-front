@@ -18,6 +18,7 @@ export default function BoxPost({ post, user }) {
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
+  const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -240,7 +241,7 @@ export default function BoxPost({ post, user }) {
             <h2>{post.description}</h2>
             <h3>{post.link}</h3>
           </Data>
-          <img src={post.image} alt="link" />
+          {regex.test(post.image) ? <img src={post.image} alt="link" /> : <></>}
         </Url>
       </PostContent>
     </Post>
@@ -352,13 +353,13 @@ const Url = styled.div`
   display: flex;
   img {
     width: 155px;
-    height: 155px;
+    height: auto;
     object-fit: cover;
     border-bottom-right-radius: 13px;
     border-top-right-radius: 13px;
   }
   :hover {
-    cursor: ${(props) => (props.metadata ? 'pointer' : 'default')};
+    cursor: pointer;
   }
   @media (max-width: 974px) {
     width: 98%;
