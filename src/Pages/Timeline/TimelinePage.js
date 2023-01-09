@@ -30,8 +30,8 @@ export default function TimelinePage() {
     setTextPost,
     disabled,
     setDisabled,
-    hashtags, 
-    setHashtags
+    hashtags,
+    setHashtags,
   } = useContext(DadosContext);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
@@ -88,6 +88,9 @@ export default function TimelinePage() {
           localStorage.clear();
           navigate('/');
         }
+        if (err.response.status === 400) {
+          alert('You must insert a valid url!');
+        }
         if (err.response.status === 422) {
           alert('Fill in the inputs correctly');
         }
@@ -133,20 +136,20 @@ export default function TimelinePage() {
                 <span>What are you going to share today?</span>
                 <InputLink
                   disabled={disabled}
-                  placeholder='http://...'
+                  placeholder="http://..."
                   onChange={(e) => setLinkPost(e.target.value)}
                   value={linkPost}
-                  type='url'
+                  type="url"
                   required
                 />
                 <InputText
                   disabled={disabled}
-                  placeholder='Talk about your link'
+                  placeholder="Talk about your link"
                   onChange={(e) => setTextPost(e.target.value)}
                   value={textPost}
-                  type='text'
+                  type="text"
                 />
-                <ButtonPost type='submit' disabled={disabled}>
+                <ButtonPost type="submit" disabled={disabled}>
                   {disabled === false ? 'Publish' : 'Publishing'}
                 </ButtonPost>
               </ContainerInputs>

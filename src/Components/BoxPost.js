@@ -18,6 +18,9 @@ export default function BoxPost({ post, user }) {
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
+  
+  const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
+  
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -186,7 +189,7 @@ export default function BoxPost({ post, user }) {
   return (
     <Post>
       <ImageProfile>
-        <img src={post.pictureUrl} alt='profile' />
+        <img src={post.pictureUrl} alt="profile" />
         <div>
           {postLikes.liked ? (
             <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
@@ -221,7 +224,7 @@ export default function BoxPost({ post, user }) {
               disabled={disabledEdition}
               onChange={(e) => setTextEdited(e.target.value)}
               value={textEdited}
-              type='text'
+              type="text"
               onKeyUp={(event) => editionPostText(event, post.id)}
             />
           ) : (
@@ -234,14 +237,13 @@ export default function BoxPost({ post, user }) {
             <Linkify options={options}>{post.txt}</Linkify>
           </Text>
         )}
-        <Url>
-          <ReactTinyLink
-            cardSize='small'
-            showGraphic={true}
-            maxLine={2}
-            minLine={1}
-            url={post.link}
-          />
+        <Url onClick={() => window.open(post.link)}>
+          <Data>
+            <h1>{post.title}</h1>
+            <h2>{post.description}</h2>
+            <h3>{post.link}</h3>
+          </Data>
+          {regex.test(post.image) ? <img src={post.image} alt="link" /> : <></>}
         </Url>
       </PostContent>
     </Post>
@@ -271,6 +273,7 @@ const Post = styled.div`
   @media (max-width: 974px) {
     width: 100%;
     border-radius: 0;
+    padding: 15px;
   }
 `;
 
@@ -294,6 +297,10 @@ const ImageProfile = styled.div`
       font-size: 20px;
       cursor: pointer;
     }
+    @media (max-width: 974px) {
+      width: 60%;
+      height: 60px;
+    }
   }
   p {
     font-family: 'Lato';
@@ -303,6 +310,10 @@ const ImageProfile = styled.div`
     line-height: 13px;
     text-align: center;
     color: #ffffff;
+  }
+
+  @media (max-width: 974px) {
+    width: 20%;
   }
 `;
 const PostContent = styled.div`
@@ -314,6 +325,10 @@ const PostContent = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+
+  @media (max-width: 974px) {
+    width: 80%;
+  }
 `;
 const Text = styled.div`
   border-radius: 16px;
@@ -328,18 +343,50 @@ const Text = styled.div`
     text-decoration: none;
     color: white;
   }
+
+  @media (max-width: 974px) {
+    width: 98%;
+  }
 `;
 const Url = styled.div`
   width: 503px;
   border: 1px solid #4d4d4d;
   border-radius: 14px;
-
+  display: flex;
+  img {
+    width: 155px;
+    height: auto;
+    object-fit: cover;
+    border-bottom-right-radius: 13px;
+    border-top-right-radius: 13px;
+  }
+  :hover {
+    cursor: pointer;
+  }
+  @media (max-width: 974px) {
+    width: 98%;
+  }
+`;
+const Data = styled.div`
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  color: #cecece;
+  box-sizing: border-box;
+  padding: 24px 20px 24px 28px;
+  h1 {
+    font-size: 16px;
+    color: #cecece;
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-size: 11px;
+    color: #9b9595;
+    margin-bottom: 12px;
+  }
+  h3 {
+    font-size: 11px;
+    color: #cecece;
+  }
 `;
 const BoxNameIcons = styled.div`
   width: 502px;
@@ -359,6 +406,9 @@ const BoxNameIcons = styled.div`
     line-height: 23px;
     color: #ffffff;
     cursor: pointer;
+  }
+  @media (max-width: 974px) {
+    width: 98%;
   }
 `;
 const BoxIcons = styled.div`

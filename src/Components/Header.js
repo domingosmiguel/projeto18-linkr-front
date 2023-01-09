@@ -9,7 +9,7 @@ import UserCard from './userCard';
 export default function Header({ user, sessionId }) {
   const [isOpen, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
-  const [data, updateData] = useForm({ search: '' }, setUsers);
+  const [data, updateData, setData] = useForm({ search: '' }, setUsers);
   const navigate = useNavigate();
   const config = {
     headers: {
@@ -54,7 +54,14 @@ export default function Header({ user, sessionId }) {
           onKeyUp={handleAnswerChange}
         />
         {users.map((user) => (
-          <UserCard key={user.id} user={user} />
+          <UserCard
+            key={user.id}
+            user={user}
+            resetInput={() => {
+              setData({ search: '' });
+              setUsers([]);
+            }}
+          />
         ))}
       </SearchResults>
       <User isOpen={isOpen}>

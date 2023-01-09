@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Trending from '../../Components/Trending';
+import Loading from '../../Components/Loading';
 
 const ContainerTimeline = styled.div`
   width: 100vw;
@@ -94,11 +95,13 @@ export default function Hashtag() {
       <ContainerPostsAndTrending>
         <ContainerPosts>
           <TittlePosts>#{hashtag}</TittlePosts>
-          {posts === ''
-            ? 'Loading'
-            : posts.length === 0
-            ? 'There are no posts yet'
-            : posts.map((p, idx) => <BoxPost post={p} key={idx} user={user} />)}
+          {posts === '' ? (
+            <Loading />
+          ) : posts.length === 0 ? (
+            'There are no posts yet'
+          ) : (
+            posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)
+          )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />
       </ContainerPostsAndTrending>

@@ -20,7 +20,6 @@ export default function UserTimeline() {
   const [sessionId, setSessionId] = useState(0);
   const [user, setUser] = useState({});
   const [hashtags, setHashtags] = useState([]);
-  console.log({ user, timelineUser, timelinePosts, hashtags, sessionId });
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
