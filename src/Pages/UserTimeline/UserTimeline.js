@@ -31,6 +31,7 @@ export default function UserTimeline() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
       .then((res) => {
+        console.log('🚀 ~ file: UserTimeline.js:34 ~ .then ~ res', res.data);
         setUser(res.data.user);
         res.data.timelinePosts.forEach((post, idx) => {
           res.data.timelinePosts[idx] = {
