@@ -4,12 +4,12 @@ import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { ReactTinyLink } from 'react-tiny-link';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
-import { useNavigate } from 'react-router-dom';
 
 export default function BoxPost({ post, user }) {
   const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
@@ -18,7 +18,9 @@ export default function BoxPost({ post, user }) {
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
+  
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
+  
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -249,7 +251,7 @@ export default function BoxPost({ post, user }) {
 }
 
 const TooltipEdit = styled(Tooltip)`
-  z-index: 2;
+  z-index: 999;
 `;
 
 const Post = styled.div`

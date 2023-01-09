@@ -104,12 +104,16 @@ const SearchResults = styled.div`
   top: 14px;
   left: 50%;
   margin-left: calc(-563px / 2);
+
+  @media (max-width: 974px) {
+    top: 85px;
+  }
 `;
 
 const SearchInput = styled.input`
   width: 100%;
   max-width: 563px;
-  height: 41px;
+  height: 45px;
   background: #ffffff;
   border-radius: 8px;
   font-family: 'Lato';
