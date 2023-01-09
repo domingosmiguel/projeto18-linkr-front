@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import Header from '../../Components/Header';
-import styled from 'styled-components';
-import Trending from '../../Components/Trending';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 import BoxPost from '../../Components/BoxPost';
+import Header from '../../Components/Header';
+import Trending from '../../Components/Trending';
 
 const ContainerTimeline = styled.div`
   width: 100vw;
@@ -72,7 +72,7 @@ export default function Hashtag() {
   };
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/hashtag/${hashtag}`, config)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}`, config)
       .then((res) => {
         setUser(res.data.user);
         setSessionId(res.data.sessionId);

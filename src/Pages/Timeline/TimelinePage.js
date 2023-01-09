@@ -5,7 +5,6 @@ import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
 import ModalDelete from '../../Components/Modal';
-import NoPosts from '../../Components/NoPosts';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
 import {
@@ -44,7 +43,7 @@ export default function TimelinePage() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:4000/timeline-posts', config)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
       .then((res) => {
         setUser(res.data.user);
         setSessionId(res.data.sessionId);
@@ -71,7 +70,7 @@ export default function TimelinePage() {
     const hashtags = textPost.split(' ').filter((elem) => elem.startsWith('#'));
     const body = { texto: textPost, link: linkPost, hashtags };
     axios
-      .post('http://localhost:4000/timeline-posts', body, config)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, body, config)
       .then((res) => {
         setDisabled(false);
         setLinkPost('');
@@ -98,67 +97,71 @@ export default function TimelinePage() {
   }
 
   function atualizarTimeline() {
-      axios
-          .get('http://localhost:4000/timeline-posts', config)
-          .then((res) => {
-              setPosts(res.data.posts);
-              setHashtags(res.data.hashtags);
-          })
-          .catch((err) => {
-              console.log(err.response.status);
-              if (err.response.status === 401) {
-                  localStorage.clear();
-                  navigate('/');
-              }
-              if (err.response.status === 500) {
-                  alert("An error occured while trying to fetch the posts, please refresh the page");
-              }
-          });
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+      .then((res) => {
+        setPosts(res.data.posts);
+        setHashtags(res.data.hashtags);
+      })
+      .catch((err) => {
+        console.log(err.response.status);
+        if (err.response.status === 401) {
+          localStorage.clear();
+          navigate('/');
+        }
+        if (err.response.status === 500) {
+          alert(
+            'An error occured while trying to fetch the posts, please refresh the page'
+          );
+        }
+      });
   }
 
   return (
-      <ContainerTimeline>
-          <Header user={user} sessionId={sessionId} />
-          <ContainerPostsAndTrending>
-              <ContainerPosts>
-                  <TittlePosts>timeline</TittlePosts>
-                  <form onSubmit={publishPost}>
-                      <BoxInputs>
-                          <Image>
-                              <img src={user.pictureUrl} alt="profile" />
-                          </Image>
-                          <ContainerInputs>
-                              <span>What are you going to share today?</span>
-                              <InputLink
-                                  disabled={disabled}
-                                  placeholder="http://..."
-                                  onChange={(e) => setLinkPost(e.target.value)}
-                                  value={linkPost}
-                                  type="url"
-                                  required
-                              />
-                              <InputText
-                                  disabled={disabled}
-                                  placeholder="Talk about your link"
-                                  onChange={(e) => setTextPost(e.target.value)}
-                                  value={textPost}
-                                  type="text"
-                              />
-                              <ButtonPost type="submit" disabled={disabled}>
-                                  {disabled === false ? 'Publish' : 'Publishing'}
-                              </ButtonPost>
-                          </ContainerInputs>
-                      </BoxInputs>
-                  </form>
-                  <ModalDelete/>
-                  {posts === ''
-                      ? <Loading/>
-                      : posts.length === 0
-                          ? "There are no posts yet"
-                          : posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)}
-              </ContainerPosts>
-              <Trending hashtags={hashtags} />
-          </ContainerPostsAndTrending>
-      </ContainerTimeline>
+    <ContainerTimeline>
+      <Header user={user} sessionId={sessionId} />
+      <ContainerPostsAndTrending>
+        <ContainerPosts>
+          <TittlePosts>timeline</TittlePosts>
+          <form onSubmit={publishPost}>
+            <BoxInputs>
+              <Image>
+                <img src={user.pictureUrl} alt='profile' />
+              </Image>
+              <ContainerInputs>
+                <span>What are you going to share today?</span>
+                <InputLink
+                  disabled={disabled}
+                  placeholder='http://...'
+                  onChange={(e) => setLinkPost(e.target.value)}
+                  value={linkPost}
+                  type='url'
+                  required
+                />
+                <InputText
+                  disabled={disabled}
+                  placeholder='Talk about your link'
+                  onChange={(e) => setTextPost(e.target.value)}
+                  value={textPost}
+                  type='text'
+                />
+                <ButtonPost type='submit' disabled={disabled}>
+                  {disabled === false ? 'Publish' : 'Publishing'}
+                </ButtonPost>
+              </ContainerInputs>
+            </BoxInputs>
+          </form>
+          <ModalDelete />
+          {posts === '' ? (
+            <Loading />
+          ) : posts.length === 0 ? (
+            'There are no posts yet'
+          ) : (
+            posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)
+          )}
+        </ContainerPosts>
+        <Trending hashtags={hashtags} />
+      </ContainerPostsAndTrending>
+    </ContainerTimeline>
   );
 }
