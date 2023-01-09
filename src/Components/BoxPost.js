@@ -86,7 +86,13 @@ export default function BoxPost({ post, user }) {
           updateTimeline();
         })
         .catch((err) => {
-          console.log(err.response.status);
+          setDisabledEdition(false);
+          if(err.response.status===500){
+            alert("internal server error");
+          }
+          if(err.response.status===401){
+            alert("Não foi possível atualizar o post");
+          }
         })
     }
   }
