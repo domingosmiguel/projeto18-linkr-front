@@ -36,6 +36,16 @@ export default function BoxPost({ post, user }) {
     setIsOpen(true);
   }
 
+  function handleAnswerChange(event){
+    console.log(event)
+    if(event.key === 'Escape'){
+        alert('The sky is your starting point!')
+}
+    else if (event.key === 'Enter') {
+        alert('The sky is your limit👀')
+}
+}
+
   return (
     <Post>
       <ImageProfile>
@@ -66,6 +76,7 @@ export default function BoxPost({ post, user }) {
               onChange={(e) => setTextEdited(e.target.value)}
               value={textEdited}
               type='text'
+              onKeyUp={handleAnswerChange}
             />
           ) : (
             <Text>
