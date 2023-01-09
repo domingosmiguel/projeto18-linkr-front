@@ -13,6 +13,7 @@ export default function ContextProvider({ children }) {
     const [id, setId] = useState("");
     const [visible, setVisible ] = useState(false)
     const [disabledModal, setDisabledModal] = useState(false)
+    const [hashtags, setHashtags] = useState([]);
 
     return (
         <DadosContext.Provider value={{
@@ -25,7 +26,8 @@ export default function ContextProvider({ children }) {
             modalIsOpen, setIsOpen,
             id, setId,
             visible, setVisible,
-            disabledModal, setDisabledModal
+            disabledModal, setDisabledModal,
+            hashtags, setHashtags
         }}>
             {children}
         </DadosContext.Provider>

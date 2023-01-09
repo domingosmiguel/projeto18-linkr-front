@@ -30,10 +30,11 @@ export default function TimelinePage() {
     setTextPost,
     disabled,
     setDisabled,
+    hashtags, 
+    setHashtags
   } = useContext(DadosContext);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
-  const [hashtags, setHashtags] = useState([]);
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),

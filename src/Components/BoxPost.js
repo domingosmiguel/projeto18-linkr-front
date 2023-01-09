@@ -10,13 +10,22 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function BoxPost({ post, user }) {
-  const { setIsOpen, setId } = useContext(DadosContext);
+  const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
   const inputRef = useRef(null);
   const [editing, setEditing] = useState(false);
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
+  const [disabledEdition, setDisabledEdition] = useState(false)
+  const config = {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
+  };
+  const navigate = useNavigate();
+
   const [postLikes, setPostLikes] = useState({
     count: 0,
     users: [],
@@ -59,6 +68,56 @@ export default function BoxPost({ post, user }) {
       hashtag: (href) => '/hashtag/' + href.substr(1),
     },
   };
+
+
+  function editionPostText(event, id) {
+    if (event.key === 'Escape') {
+      setEditing(false);
+    }
+    else if (event.key === 'Enter') {
+      setDisabledEdition(true);
+    
+      const hashtags = textEdited.split(' ').filter((elem) => elem.startsWith('#'));
+      const body = { texto: textEdited, hashtags };
+      axios.patch(`${process.env.REACT_APP_BACKEND_URL}/post-edition/${id}`, body, config)
+        .then((res) => {
+          
+          setDisabledEdition(true);
+          updateTimeline();
+        })
+        .catch((err) => {
+          setDisabledEdition(false);
+          if(err.response.status===500){
+            alert("internal server error");
+          }
+          if(err.response.status===401){
+            alert("Não foi possível atualizar o post");
+          }
+        })
+    }
+  }
+
+  function updateTimeline(){
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+          .then((response)=>{
+            setPosts(response.data.posts);
+            setHashtags(response.data.hashtags);
+            setDisabledEdition(false);
+            setEditing(false);
+          })
+          .catch((error)=>{
+            console.log(error.response.status);
+            if (error.response.status === 401) {
+              localStorage.clear();
+              navigate('/');
+            }
+            if (error.response.status === 500) {
+              alert(
+                'An error occured while trying to fetch the posts, please refresh the page'
+              );
+            }
+          })
+  }
 
   function openModal(postId) {
     setId(postId);
@@ -132,11 +191,11 @@ export default function BoxPost({ post, user }) {
           editing === true ? (
             <InputEdition
               ref={inputRef}
-              // disabled={disabled}
-              // placeholder="Talk about your link"
+              disabled={disabledEdition}
               onChange={(e) => setTextEdited(e.target.value)}
               value={textEdited}
               type='text'
+              onKeyUp={(event) => editionPostText(event, post.id)}
             />
           ) : (
             <Text>
@@ -290,4 +349,9 @@ const BoxIcons = styled.div`
 const InputEdition = styled.input`
   width: 97%;
   height: 40px;
+  &:disabled{
+    background-color: #b7b7b7;
+    color: #464141;
+    cursor: not-allowed;
+  }
 `;
