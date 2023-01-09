@@ -5,7 +5,6 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
-import { ReactTinyLink } from 'react-tiny-link';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
@@ -18,7 +17,8 @@ export default function BoxPost({ post, user }) {
   const [editing, setEditing] = useState(false);
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
-  const [disabledEdition, setDisabledEdition] = useState(false)
+  const [disabledEdition, setDisabledEdition] = useState(false);
+  const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -67,54 +67,59 @@ export default function BoxPost({ post, user }) {
     },
   };
 
-
   function editionPostText(event, id) {
     if (event.key === 'Escape') {
       setEditing(false);
-    }
-    else if (event.key === 'Enter') {
+    } else if (event.key === 'Enter') {
       setDisabledEdition(true);
-    
-      const hashtags = textEdited.split(' ').filter((elem) => elem.startsWith('#'));
+
+      const hashtags = textEdited
+        .split(' ')
+        .filter((elem) => elem.startsWith('#'));
       const body = { texto: textEdited, hashtags };
-      axios.patch(`${process.env.REACT_APP_BACKEND_URL}/post-edition/${id}`, body, config)
+      axios
+        .patch(
+          `${process.env.REACT_APP_BACKEND_URL}/post-edition/${id}`,
+          body,
+          config
+        )
         .then((res) => {
-          
           setDisabledEdition(true);
           updateTimeline();
         })
         .catch((err) => {
           setDisabledEdition(false);
-          if(err.response.status===500){
-            alert("internal server error");
+          if (err.response.status === 500) {
+            alert('internal server error');
           }
-          if(err.response.status===401){
-            alert("Não foi possível atualizar o post");
+          if (err.response.status === 401) {
+            alert('Não foi possível atualizar o post');
           }
-        })
+        });
     }
   }
 
-  function updateTimeline(){
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
-          .then((response)=>{
-            setPosts(response.data.posts);
-            setHashtags(response.data.hashtags);
-            setDisabledEdition(false);
-            setEditing(false);
-          })
-          .catch((error)=>{
-            console.log(error.response.status);
-            if (error.response.status === 401) {
-              localStorage.clear();
-              navigate('/');
-            }
-            if (error.response.status === 500) {
-              alert(
-                'An error occured while trying to fetch the posts, please refresh the page'
-              );
-            }
-          })
+  function updateTimeline() {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+      .then((response) => {
+        setPosts(response.data.posts);
+        setHashtags(response.data.hashtags);
+        setDisabledEdition(false);
+        setEditing(false);
+      })
+      .catch((error) => {
+        console.log(error.response.status);
+        if (error.response.status === 401) {
+          localStorage.clear();
+          navigate('/');
+        }
+        if (error.response.status === 500) {
+          alert(
+            'An error occured while trying to fetch the posts, please refresh the page'
+          );
+        }
+      });
   }
 
   function openModal(postId) {
@@ -182,7 +187,7 @@ export default function BoxPost({ post, user }) {
   return (
     <Post>
       <ImageProfile>
-        <img src={post.pictureUrl} alt='profile' />
+        <img src={post.pictureUrl} alt="profile" />
         <div>
           {postLikes.liked ? (
             <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
@@ -217,7 +222,7 @@ export default function BoxPost({ post, user }) {
               disabled={disabledEdition}
               onChange={(e) => setTextEdited(e.target.value)}
               value={textEdited}
-              type='text'
+              type="text"
               onKeyUp={(event) => editionPostText(event, post.id)}
             />
           ) : (
@@ -230,14 +235,13 @@ export default function BoxPost({ post, user }) {
             <Linkify options={options}>{post.txt}</Linkify>
           </Text>
         )}
-        <Url>
-          <ReactTinyLink
-            cardSize='small'
-            showGraphic={true}
-            maxLine={2}
-            minLine={1}
-            url={post.link}
-          />
+        <Url onClick={() => window.open(post.link)}>
+          <Data>
+            <h1>{post.title}</h1>
+            <h2>{post.description}</h2>
+            <h3>{post.link}</h3>
+          </Data>
+          {regex.test(post.image) ? <img src={post.image} alt="link" /> : <></>}
         </Url>
       </PostContent>
     </Post>
@@ -292,9 +296,9 @@ const ImageProfile = styled.div`
       cursor: pointer;
     }
     @media (max-width: 974px) {
-    width: 60%;
-    height: 60px;
-  }
+      width: 60%;
+      height: 60px;
+    }
   }
   p {
     font-family: 'Lato';
@@ -346,16 +350,40 @@ const Url = styled.div`
   width: 503px;
   border: 1px solid #4d4d4d;
   border-radius: 14px;
-
+  display: flex;
+  img {
+    width: 155px;
+    height: auto;
+    object-fit: cover;
+    border-bottom-right-radius: 13px;
+    border-top-right-radius: 13px;
+  }
+  :hover {
+    cursor: pointer;
+  }
+  @media (max-width: 974px) {
+    width: 98%;
+  }
+`;
+const Data = styled.div`
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  color: #cecece;
-
-  @media (max-width: 974px) {
-    width: 98%;
+  box-sizing: border-box;
+  padding: 24px 20px 24px 28px;
+  h1 {
+    font-size: 16px;
+    color: #cecece;
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-size: 11px;
+    color: #9b9595;
+    margin-bottom: 12px;
+  }
+  h3 {
+    font-size: 11px;
+    color: #cecece;
   }
 `;
 const BoxNameIcons = styled.div`
@@ -396,7 +424,7 @@ const BoxIcons = styled.div`
 const InputEdition = styled.input`
   width: 97%;
   height: 40px;
-  &:disabled{
+  &:disabled {
     background-color: #b7b7b7;
     color: #464141;
     cursor: not-allowed;
