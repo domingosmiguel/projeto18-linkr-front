@@ -1,70 +1,88 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import BoxPost from '../../Components/BoxPost';
+import Header from '../../Components/Header';
+import Loading from '../../Components/Loading';
+import Trending from '../../Components/Trending';
 import {
-    ContainerTimeline,
-    ContainerPostsAndTrending,
-    ContainerPosts,
-    TittlePosts,
-    ContainerImgNameUser
-} from "./UserTimelineStyle"
-import Header from "../../Components/Header"
-import BoxPost from "../../Components/BoxPost"
-import Loading from "../../Components/Loading"
-import Trending from "../../Components/Trending"
-import { useState, useEffect } from "react"
-import axios from "axios"
-import { useNavigate, useParams } from "react-router-dom"
+  ContainerImgNameUser,
+  ContainerPosts,
+  ContainerPostsAndTrending,
+  ContainerTimeline,
+  TittlePosts,
+} from './UserTimelineStyle';
 
 export default function UserTimeline() {
-    const {id} = useParams()
-    const [postsUser, setPostsUser] = useState("")
-    const [user, setUser] =  useState("")
-    const [sessionId, setSessionId] = useState(0);
-    const [hashtags, setHashtags] = useState([]);
-    const config = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-    };
-    const navigate = useNavigate()
+  const { id } = useParams();
+  const [timelinePosts, setTimelinePosts] = useState([]);
+  const [timelineUser, setTimelineUser] = useState({});
+  const [sessionId, setSessionId] = useState(0);
+  const [user, setUser] = useState({});
+  const [hashtags, setHashtags] = useState([]);
+  console.log({ user, timelineUser, timelinePosts, hashtags, sessionId });
+  const config = {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
+  };
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        axios
-            .get(`ROTA/${id}`, config)
-            .then((res) => {
-                setUser(res.data.user);
-                setPostsUser(res.data.posts);
-                setSessionId(res.data.sessionId);
-                setHashtags(res.data.hashtags);
-            })
-            .catch((err) => {
-                console.log(err.response.status);
-                if (err.response.status === 401) {
-                    localStorage.clear();
-                    navigate('/');
-                }
-                if (err.response.status === 500) {
-                    alert("An error occured while trying to fetch the posts, please refresh the page");
-                }
-            });
-    }, []);
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
+      .then((res) => {
+        setUser(res.data.user);
+        res.data.timelineData.posts.forEach((post, idx) => {
+          res.data.timelineData.posts[idx] = {
+            ...post,
+            username: res.data.timelineData.username,
+            pictureUrl: res.data.timelineData.pictureUrl,
+          };
+        });
+        setTimelinePosts([...res.data.timelineData.posts]);
+        delete res.data.timelineData.posts;
+        setTimelineUser(res.data.timelineData);
+        setHashtags(res.data.hashtags);
+        setSessionId(res.data.sessionId);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response?.status === 401) {
+          localStorage.clear();
+          navigate('/');
+        }
+        if (error.response?.status === 500) {
+          alert(
+            'An error occurred while trying to fetch the posts, please refresh the page'
+          );
+        }
+      });
+  }, []);
 
-
-    return (
-        <ContainerTimeline>
-           <Header user={user} sessionId={sessionId} />
-            <ContainerPostsAndTrending>
-                <ContainerPosts>
-                    <ContainerImgNameUser>
-                        <TittlePosts><img src="https://cdn.maioresemelhores.com/imagens/mm-gatos-1-cke.jpg"
-                            alt="profile" /><span>USER NAME HERE</span></TittlePosts>
-                    </ContainerImgNameUser>
-                    {postsUser === ''
-                    ? <Loading />
-                    : postsUser.length === 0
-                        ? "There are no posts yet"
-                        : postsUser.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)}
-                </ContainerPosts>
-                          <Trending hashtags={hashtags} />
-            </ContainerPostsAndTrending>
-        </ContainerTimeline>
-    )
+  return (
+    <ContainerTimeline>
+      <Header user={user} sessionId={sessionId} />
+      <ContainerPostsAndTrending>
+        <ContainerPosts>
+          <ContainerImgNameUser>
+            <TittlePosts>
+              <img src={timelineUser.pictureUrl} alt={timelineUser.username} />
+              <span>{timelineUser.username}'s posts</span>
+            </TittlePosts>
+          </ContainerImgNameUser>
+          {timelinePosts === '' ? (
+            <Loading />
+          ) : timelinePosts.length === 0 ? (
+            'There are no posts yet'
+          ) : (
+            timelinePosts.map((post) => (
+              <BoxPost user={user} post={post} key={post.id} />
+            ))
+          )}
+        </ContainerPosts>
+        <Trending hashtags={hashtags} />
+      </ContainerPostsAndTrending>
+    </ContainerTimeline>
+  );
 }
