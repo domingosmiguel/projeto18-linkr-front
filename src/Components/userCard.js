@@ -1,9 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default function UserCard({ user: { id, username, pictureUrl } }) {
+export default function UserCard({
+  user: { id, username, pictureUrl },
+  resetInput,
+}) {
   const navigate = useNavigate();
   const handleClick = () => {
+    resetInput();
     navigate(`/user/${id}`);
   };
   return (
