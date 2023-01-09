@@ -30,7 +30,6 @@ export default function BoxPost({ post, user }) {
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('token')}`,
   };
-  console.log('🚀 ~ file: BoxPost.js:33 ~ BoxPost ~ headers', headers);
 
   useEffect(() => {
     if (editing) {
@@ -47,7 +46,6 @@ export default function BoxPost({ post, user }) {
           headers,
         });
         setPostLikes(likeInfo);
-        console.log('🚀 ~ file: BoxPost.js:48 ~ likes', likeInfo);
       } catch (error) {
         console.log(error);
       }
@@ -70,15 +68,13 @@ export default function BoxPost({ post, user }) {
     if (postLikes.count) {
       if (postLikes.liked) {
         txt = 'You';
-        if (postLikes.users.length === 1) {
-          txt += ` and ${postLikes.users[0]}`;
-        } else if (postLikes.users.length === 2 && postLikes.count > 2) {
+        if (postLikes.users.length === 2 && postLikes.count >= 2) {
           txt += `, ${postLikes.users[0]} and other ${
             postLikes.count - 2 > 1
               ? `${postLikes.count - 2} people`
               : '1 person'
           }`;
-        } else {
+        } else if (postLikes.users.length === 1) {
           txt += ` and ${postLikes.users[0]}`;
         }
       } else if (postLikes.users.length === 1) {
@@ -93,8 +89,35 @@ export default function BoxPost({ post, user }) {
     } else {
       txt += 'No likes yet';
     }
-    console.log('🚀 ~ file: BoxPost.js:92 ~ tooltipTxt ~ txt', txt);
     return txt;
+  };
+
+  const like = async () => {
+    try {
+      await axios.request({
+        baseURL: process.env.REACT_APP_BACKEND_URL,
+        url: `/${post.id}/userLike`,
+        method: 'post',
+        headers,
+      });
+      setPostLikes({ ...postLikes, liked: true });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const dislike = async () => {
+    try {
+      await axios.request({
+        baseURL: process.env.REACT_APP_BACKEND_URL,
+        url: `/${post.id}/userLike`,
+        method: 'delete',
+        headers,
+      });
+      setPostLikes({ ...postLikes, liked: false });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -103,9 +126,9 @@ export default function BoxPost({ post, user }) {
         <img src={post.pictureUrl} alt='profile' />
         <div>
           {postLikes.liked ? (
-            <AiFillHeart style={{ color: 'red' }} />
+            <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
           ) : (
-            <AiOutlineHeart />
+            <AiOutlineHeart onClick={like} />
           )}
           <p id={`post-likes-info-${post.id}`}>
             {postLikes.count} Like{postLikes.count !== 1 && 's'}
