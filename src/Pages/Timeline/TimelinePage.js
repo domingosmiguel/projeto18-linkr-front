@@ -127,7 +127,7 @@ export default function TimelinePage() {
           <form onSubmit={publishPost}>
             <BoxInputs>
               <Image>
-                <img src={user.pictureUrl} alt='profile' />
+                <img src={user.pictureUrl} alt={user.username} />
               </Image>
               <ContainerInputs>
                 <span>What are you going to share today?</span>
