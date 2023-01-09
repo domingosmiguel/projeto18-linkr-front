@@ -31,20 +31,20 @@ export default function BoxPost({ post, user }) {
     },
   };
 
-  function openModal(postId) {
-    setId(postId);
-    setIsOpen(true);
-  }
 
-  function handleAnswerChange(event){
-    console.log(event)
+  function editionPostText(event){
     if(event.key === 'Escape'){
-        alert('The sky is your starting point!')
+      setEditing(false);
 }
     else if (event.key === 'Enter') {
         alert('The sky is your limit👀')
 }
 }
+
+  function openModal(postId) {
+    setId(postId);
+    setIsOpen(true);
+  }
 
   return (
     <Post>
@@ -76,7 +76,7 @@ export default function BoxPost({ post, user }) {
               onChange={(e) => setTextEdited(e.target.value)}
               value={textEdited}
               type='text'
-              onKeyUp={handleAnswerChange}
+              onKeyUp={editionPostText}
             />
           ) : (
             <Text>
