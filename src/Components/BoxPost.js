@@ -1,3 +1,4 @@
+import axios from 'axios';
 import 'linkify-plugin-hashtag';
 import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -32,12 +33,13 @@ export default function BoxPost({ post, user }) {
   };
 
 
-  function editionPostText(event){
+  function editionPostText(event, id){
     if(event.key === 'Escape'){
       setEditing(false);
 }
     else if (event.key === 'Enter') {
-        alert('The sky is your limit👀')
+      console.log(id)
+        // axios.post(`${process.env.REACT_APP_BACKEND_URL}/post-edition/${id}`)
 }
 }
 
@@ -76,7 +78,7 @@ export default function BoxPost({ post, user }) {
               onChange={(e) => setTextEdited(e.target.value)}
               value={textEdited}
               type='text'
-              onKeyUp={editionPostText}
+              onKeyUp={(event)=>editionPostText(event, post.id)}
             />
           ) : (
             <Text>
