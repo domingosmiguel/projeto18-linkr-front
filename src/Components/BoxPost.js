@@ -1,10 +1,13 @@
+import axios from 'axios';
 import 'linkify-plugin-hashtag';
 import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { ReactTinyLink } from 'react-tiny-link';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 
@@ -14,16 +17,42 @@ export default function BoxPost({ post, user }) {
   const [editing, setEditing] = useState(false);
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
+  const [postLikes, setPostLikes] = useState({
+    count: 0,
+    users: [],
+    liked: false,
+  });
   function makeEdition(id) {
     setEditing(!editing);
     setIdEdition(id);
   }
+
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+  };
+  console.log('🚀 ~ file: BoxPost.js:33 ~ BoxPost ~ headers', headers);
 
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
     }
   }, [editing]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: likeInfo } = await axios.request({
+          baseURL: process.env.REACT_APP_BACKEND_URL,
+          url: `/${post.id}/likes`,
+          headers,
+        });
+        setPostLikes(likeInfo);
+        console.log('🚀 ~ file: BoxPost.js:48 ~ likes', likeInfo);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [postLikes.liked]);
 
   const options = {
     formatHref: {
@@ -36,13 +65,55 @@ export default function BoxPost({ post, user }) {
     setIsOpen(true);
   }
 
+  const tooltipTxt = () => {
+    let txt = '';
+    if (postLikes.count) {
+      if (postLikes.liked) {
+        txt = 'You';
+        if (postLikes.users.length === 1) {
+          txt += ` and ${postLikes.users[0]}`;
+        } else if (postLikes.users.length === 2 && postLikes.count > 2) {
+          txt += `, ${postLikes.users[0]} and other ${
+            postLikes.count - 2 > 1
+              ? `${postLikes.count - 2} people`
+              : '1 person'
+          }`;
+        } else {
+          txt += ` and ${postLikes.users[0]}`;
+        }
+      } else if (postLikes.users.length === 1) {
+        txt += postLikes.users[0];
+      } else if (postLikes.users.length === 2 && postLikes.count > 2) {
+        txt += `${postLikes.users[0]}, ${postLikes.users[1]} and other ${
+          postLikes.count - 2 > 1 ? `${postLikes.count - 2} people` : '1 person'
+        }`;
+      } else {
+        txt += `${postLikes.users[0]} and ${postLikes.users[1]}`;
+      }
+    } else {
+      txt += 'No likes yet';
+    }
+    console.log('🚀 ~ file: BoxPost.js:92 ~ tooltipTxt ~ txt', txt);
+    return txt;
+  };
+
   return (
     <Post>
       <ImageProfile>
         <img src={post.pictureUrl} alt='profile' />
         <div>
-          <AiOutlineHeart />
-          <p>0 Likes</p>
+          {postLikes.liked ? (
+            <AiFillHeart style={{ color: 'red' }} />
+          ) : (
+            <AiOutlineHeart />
+          )}
+          <p id={`post-likes-info-${post.id}`}>
+            {postLikes.count} Like{postLikes.count !== 1 && 's'}
+          </p>
+          <TooltipEdit
+            anchorId={`post-likes-info-${post.id}`}
+            content={tooltipTxt()}
+          />
         </div>
       </ImageProfile>
       <PostContent>
@@ -91,6 +162,10 @@ export default function BoxPost({ post, user }) {
   );
 }
 
+const TooltipEdit = styled(Tooltip)`
+  z-index: 2;
+`;
+
 const Post = styled.div`
   box-sizing: border-box;
   padding: 18px 18px;
@@ -112,6 +187,7 @@ const Post = styled.div`
     border-radius: 0;
   }
 `;
+
 const ImageProfile = styled.div`
   width: 50px;
   img {

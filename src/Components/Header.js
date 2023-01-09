@@ -32,6 +32,13 @@ export default function Header({ user, sessionId }) {
       );
     });
   }
+  function handleAnswerChange(event) {
+    if (event.key === 'Escape') {
+      event.target.value = '';
+      updateData(event);
+      event.target.blur();
+    }
+  }
   return (
     <Container>
       <Logo onClick={() => navigate('/timeline')}>Linkr</Logo>
@@ -44,6 +51,7 @@ export default function Header({ user, sessionId }) {
           debounceTimeout={300}
           onChange={(e) => updateData(e, config.headers)}
           value={data.search}
+          onKeyUp={handleAnswerChange}
         />
         {users.map((user) => (
           <UserCard key={user.id} user={user} />
