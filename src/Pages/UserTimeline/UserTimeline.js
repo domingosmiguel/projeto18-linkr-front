@@ -33,16 +33,15 @@ export default function UserTimeline() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
       .then((res) => {
         setUser(res.data.user);
-        res.data.timelineData.posts.forEach((post, idx) => {
-          res.data.timelineData.posts[idx] = {
+        res.data.timelinePosts.forEach((post, idx) => {
+          res.data.timelinePosts[idx] = {
             ...post,
-            username: res.data.timelineData.username,
-            pictureUrl: res.data.timelineData.pictureUrl,
+            username: res.data.timelineUser.username,
+            pictureUrl: res.data.timelineUser.pictureUrl,
           };
         });
-        setTimelinePosts([...res.data.timelineData.posts]);
-        delete res.data.timelineData.posts;
-        setTimelineUser(res.data.timelineData);
+        setTimelinePosts(res.data.timelinePosts);
+        setTimelineUser(res.data.timelineUser);
         setHashtags(res.data.hashtags);
         setSessionId(res.data.sessionId);
       })
