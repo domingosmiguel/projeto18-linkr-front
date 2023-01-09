@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ContainerTimeline = styled.div`
   width: 100vw;
@@ -11,7 +11,7 @@ export const ContainerTimeline = styled.div`
   ::-webkit-scrollbar {
     width: 0px;
   }
-`
+`;
 export const ContainerPostsAndTrending = styled.div`
   width: 940px;
   min-height: 100%;
@@ -23,7 +23,7 @@ export const ContainerPostsAndTrending = styled.div`
   @media (max-width: 974px) {
     width: 100%;
   }
-`
+`;
 export const ContainerPosts = styled.div`
   width: 611px;
   height: 1000px;
@@ -35,16 +35,16 @@ export const ContainerPosts = styled.div`
     width: 100%;
     margin: 0 auto;
   }
-`
+`;
 export const ContainerImgNameUser = styled.div`
-    width: 500px;
-    height: 100px;
-    margin-top: 53px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    text-align: center;
-`
+  width: 500px;
+  height: 100px;
+  margin-top: 53px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+`;
 export const TittlePosts = styled.div`
   font-family: 'Oswald', sans-serif;
   font-style: normal;
@@ -54,7 +54,7 @@ export const TittlePosts = styled.div`
   color: #ffffff;
   display: flex;
 
-  span{
+  span {
     display: block;
     width: 100%;
     height: 100%;
@@ -66,6 +66,7 @@ export const TittlePosts = styled.div`
     height: 55px;
     border-radius: 50%;
     margin-right: 18px;
+    object-fit: cover;
   }
 
   @media (max-width: 974px) {
@@ -73,7 +74,7 @@ export const TittlePosts = styled.div`
     box-sizing: border-box;
     padding: 10px 10px;
   }
-`
+`;
 export const ContainerInputs = styled.div`
   width: 502px;
   height: 209px;
@@ -91,7 +92,7 @@ export const ContainerInputs = styled.div`
     line-height: 24px;
     color: #707070;
   }
-`
+`;
 export const InputLink = styled.input`
   width: 503px;
   height: 30px;
@@ -120,7 +121,7 @@ export const InputLink = styled.input`
     background-color: #b5b5b5;
     color: #000000;
   }
-`
+`;
 export const InputText = styled.input`
   width: 502px;
   height: 66px;
@@ -151,7 +152,7 @@ export const InputText = styled.input`
     background-color: #b5b5b5;
     color: #000000;
   }
-`
+`;
 export const ButtonPost = styled.button`
   width: 112px;
   height: 31px;
@@ -182,4 +183,4 @@ export const ButtonPost = styled.button`
       background: #1877f2;
     }
   }
-`
+`;

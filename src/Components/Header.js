@@ -128,6 +128,7 @@ const Main = styled.div`
   padding-right: 18px;
   img {
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 
