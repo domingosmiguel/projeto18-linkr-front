@@ -58,7 +58,7 @@ export default function UserTimeline() {
           );
         }
       });
-  }, []);
+  }, [id]);
 
   return (
     <ContainerTimeline>
