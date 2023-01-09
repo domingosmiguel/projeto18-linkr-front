@@ -24,5 +24,5 @@ export default function useForm(initialValue, setUsers) {
     }
   };
 
-  return [form, updateForm];
+  return [form, updateForm, setForm];
 }
