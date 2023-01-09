@@ -81,6 +81,9 @@ export const Image = styled.div`
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+    @media (max-width: 974px) {
+    display: none;
+  }
   }
 `;
 export const ContainerInputs = styled.div`
@@ -99,6 +102,13 @@ export const ContainerInputs = styled.div`
     font-size: 20px;
     line-height: 24px;
     color: #707070;
+    @media (max-width: 974px) {
+    width: 100%;
+  }
+  }
+
+  @media (max-width: 974px) {
+    width: 100%;
   }
 `;
 export const InputLink = styled.input`
@@ -128,6 +138,10 @@ export const InputLink = styled.input`
   &:disabled {
     background-color: #b5b5b5;
     color: #000000;
+  }
+
+  @media (max-width: 974px) {
+    width: 95%;
   }
 `;
 export const InputText = styled.input`
@@ -160,6 +174,10 @@ export const InputText = styled.input`
     background-color: #b5b5b5;
     color: #000000;
   }
+
+  @media (max-width: 974px) {
+    width: 95%;
+  }
 `;
 export const ButtonPost = styled.button`
   width: 112px;
@@ -183,6 +201,7 @@ export const ButtonPost = styled.button`
   &:disabled {
     background-color: #b5b5b5;
     color: #000000;
+    cursor: not-allowed;
   }
 
   &:hover {
@@ -190,5 +209,11 @@ export const ButtonPost = styled.button`
     &:disabled {
       background: #1877f2;
     }
+  }
+
+  @media (max-width: 974px) {
+    width: 30%;
+    margin-left: 65%;
+    font-size: 12px;
   }
 `;
