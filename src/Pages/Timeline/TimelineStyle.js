@@ -82,8 +82,8 @@ export const Image = styled.div`
     border-radius: 50%;
     object-fit: cover;
     @media (max-width: 974px) {
-    display: none;
-  }
+      display: none;
+    }
   }
 `;
 export const ContainerInputs = styled.div`
@@ -103,8 +103,8 @@ export const ContainerInputs = styled.div`
     line-height: 24px;
     color: #707070;
     @media (max-width: 974px) {
-    width: 100%;
-  }
+      width: 100%;
+    }
   }
 
   @media (max-width: 974px) {
@@ -215,5 +215,26 @@ export const ButtonPost = styled.button`
     width: 30%;
     margin-left: 65%;
     font-size: 12px;
+  }
+`;
+
+export const NewPosts = styled.div`
+  width: 611px;
+  height: 61px;
+  background: #1877f2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  display: ${(props) => (props.number ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  color: white;
+  gap: 10px;
+  margin-bottom: 18px;
+  :hover {
+    cursor: pointer;
   }
 `;
