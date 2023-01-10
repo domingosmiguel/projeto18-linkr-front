@@ -7,6 +7,7 @@ import Loading from '../../Components/Loading';
 import ModalDelete from '../../Components/Modal';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
+import useInterval from 'use-interval';
 import {
   BoxInputs,
   ButtonPost,
@@ -18,7 +19,9 @@ import {
   InputLink,
   InputText,
   TittlePosts,
+  NewPosts,
 } from './TimelineStyle';
+import styled from 'styled-components';
 
 export default function TimelinePage() {
   const {
@@ -37,6 +40,7 @@ export default function TimelinePage() {
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [following, setFollowing] = useState([]);
+  const [newPostsNumber, setNewPostsNumber] = useState(0);
   const config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -55,7 +59,6 @@ export default function TimelinePage() {
         setHashtags(res.data.hashtags);
       })
       .catch((err) => {
-        console.log(err.response?.status);
         if (err.response?.status === 401) {
           localStorage.clear();
           navigate('/');
@@ -68,6 +71,24 @@ export default function TimelinePage() {
       });
   }, []);
 
+  useInterval(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/new-posts/${
+          posts.length ? posts[0].id : 0
+        }`,
+        config
+      )
+      .then((response) => {
+        if (response.data) setNewPostsNumber(response.data);
+      })
+      .catch((error) => {
+        alert(
+          'An error occurred while trying to get the number of new posts, please try refreshing the page'
+        );
+      });
+  }, 15000);
+
   function publishPost(event) {
     event.preventDefault();
     setDisabled(true);
@@ -79,7 +100,7 @@ export default function TimelinePage() {
         setDisabled(false);
         setLinkPost('');
         setTextPost('');
-        atualizarTimeline();
+        updateTimeline();
       })
       .catch((err) => {
         console.log(err.response.status);
@@ -103,12 +124,13 @@ export default function TimelinePage() {
       });
   }
 
-  function atualizarTimeline() {
+  function updateTimeline() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
       .then((res) => {
         setPosts(res.data.posts);
         setHashtags(res.data.hashtags);
+        setNewPostsNumber(0);
       })
       .catch((err) => {
         console.log(err.response.status);
@@ -159,6 +181,10 @@ export default function TimelinePage() {
             </BoxInputs>
           </form>
           <ModalDelete />
+          <NewPosts number={newPostsNumber} onClick={updateTimeline}>
+            {newPostsNumber} new posts, load more!{' '}
+            <ion-icon name="refresh"></ion-icon>
+          </NewPosts>
           {posts === '' ? (
             <Loading />
           ) : posts.length === 0 ? (
