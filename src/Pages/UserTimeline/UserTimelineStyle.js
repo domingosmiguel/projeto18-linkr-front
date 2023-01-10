@@ -37,19 +37,19 @@ export const ContainerPosts = styled.div`
   }
 `;
 export const ContainerImgNameUser = styled.div`
-  width: 500px;
+  width: 100%;
   height: 100px;
-  margin-top: 53px;
+  margin-top: 60px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  text-align: center;
 
   @media (max-width: 974px) {
     width: 100%;
   }
 `;
 export const TittlePosts = styled.div`
+  width: 100%;
   font-family: 'Oswald', sans-serif;
   font-style: normal;
   font-weight: 700;
@@ -57,19 +57,19 @@ export const TittlePosts = styled.div`
   line-height: 64px;
   color: #ffffff;
   display: flex;
+  align-items: center;
 
   span {
-    display: block;
+    margin-right: 0;
     width: 100%;
-    height: 100%;
-    text-align: center;
   }
 
   img {
-    width: 55px;
+    width: 100%;
+    max-width: 55px;
     height: 55px;
     border-radius: 50%;
-    margin-right: 18px;
+    margin: 0 18px;
     object-fit: cover;
   }
 
@@ -77,6 +77,12 @@ export const TittlePosts = styled.div`
     width: 100%;
     box-sizing: border-box;
     padding: 10px 10px;
+    font-size: 33px;
+    line-height: 45px;
+
+    span {
+      margin-right: 150px;
+    }
   }
 `;
 export const ContainerInputs = styled.div`

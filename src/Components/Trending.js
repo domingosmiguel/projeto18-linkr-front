@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import Linkify from 'linkify-react';
-import 'linkify-plugin-hashtag';
 
 export default function Trending({ hashtags }) {
   return (
