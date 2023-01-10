@@ -113,6 +113,12 @@ const MyButton = styled.button`
   border: none;
   border-radius: 5px;
 
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+
   @media (max-width: 974px) {
     right: 28px;
   }
