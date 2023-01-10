@@ -5,6 +5,7 @@ import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
 import Trending from '../../Components/Trending';
+import FollowButton from './FollowButton';
 import {
   ContainerImgNameUser,
   ContainerPosts,
@@ -15,7 +16,7 @@ import {
 
 export default function UserTimeline() {
   const { id } = useParams();
-  const [timelinePosts, setTimelinePosts] = useState([]);
+  const [timelinePosts, setTimelinePosts] = useState('');
   const [timelineUser, setTimelineUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [user, setUser] = useState({});
@@ -31,7 +32,6 @@ export default function UserTimeline() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
       .then((res) => {
-        console.log('🚀 ~ file: UserTimeline.js:34 ~ .then ~ res', res.data);
         setUser(res.data.user);
         res.data.timelinePosts.forEach((post, idx) => {
           res.data.timelinePosts[idx] = {
@@ -80,6 +80,7 @@ export default function UserTimeline() {
             ))
           )}
         </ContainerPosts>
+        {timelineUser.id !== user.id && <FollowButton />}
         <Trending hashtags={hashtags} />
       </ContainerPostsAndTrending>
     </ContainerTimeline>
