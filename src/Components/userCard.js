@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function UserCard({
+  following,
   user: { id, username, pictureUrl },
   resetInput,
 }) {
@@ -13,7 +14,8 @@ export default function UserCard({
   return (
     <Card onClick={handleClick}>
       <ProfilePic src={pictureUrl} alt={username} />
-      <Username>{username}</Username>
+      <p>{username}</p>
+      {following && <Follows>• following</Follows>}
     </Card>
   );
 }
@@ -25,9 +27,16 @@ const Card = styled.div`
   padding: 14px 17px 7px;
   display: flex;
   align-items: center;
+
   :last-child {
     padding: 14px 17px 14px;
   }
+
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 23px;
 `;
 
 const ProfilePic = styled.img`
@@ -38,10 +47,7 @@ const ProfilePic = styled.img`
   margin-right: 12px;
 `;
 
-const Username = styled.p`
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 19px;
-  line-height: 23px;
+const Follows = styled.p`
+  color: #c5c5c5;
+  margin-left: 7px;
 `;

@@ -56,6 +56,7 @@ export default function Header({ user, sessionId }) {
         {users.map((user) => (
           <UserCard
             key={user.id}
+            following={user.following}
             user={user}
             resetInput={() => {
               setData({ search: '' });
