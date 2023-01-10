@@ -36,8 +36,10 @@ export default function TimelinePage() {
     hashtags,
     setHashtags,
   } = useContext(DadosContext);
+  console.log('🚀 ~ file: TimelinePage.js:36 ~ TimelinePage ~ posts', posts);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
+  const [following, setFollowing] = useState([]);
   const [newPostsNumber, setNewPostsNumber] = useState(0);
   const config = {
     headers: {
@@ -53,6 +55,7 @@ export default function TimelinePage() {
         setUser(res.data.user);
         setSessionId(res.data.sessionId);
         setPosts(res.data.posts);
+        setFollowing(res.data.following);
         setHashtags(res.data.hashtags);
       })
       .catch((err) => {
@@ -158,20 +161,20 @@ export default function TimelinePage() {
                 <span>What are you going to share today?</span>
                 <InputLink
                   disabled={disabled}
-                  placeholder="http://..."
+                  placeholder='http://...'
                   onChange={(e) => setLinkPost(e.target.value)}
                   value={linkPost}
-                  type="url"
+                  type='url'
                   required
                 />
                 <InputText
                   disabled={disabled}
-                  placeholder="Talk about your link"
+                  placeholder='Talk about your link'
                   onChange={(e) => setTextPost(e.target.value)}
                   value={textPost}
-                  type="text"
+                  type='text'
                 />
-                <ButtonPost type="submit" disabled={disabled}>
+                <ButtonPost type='submit' disabled={disabled}>
                   {disabled === false ? 'Publish' : 'Publishing'}
                 </ButtonPost>
               </ContainerInputs>
@@ -185,7 +188,11 @@ export default function TimelinePage() {
           {posts === '' ? (
             <Loading />
           ) : posts.length === 0 ? (
-            'There are no posts yet'
+            following.length === 0 ? (
+              "You don't follow anyone yet. Search for new friends!"
+            ) : (
+              'No posts found from your friends'
+            )
           ) : (
             posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)
           )}

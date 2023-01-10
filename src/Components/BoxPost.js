@@ -117,7 +117,7 @@ export default function BoxPost({ post, user }) {
         }
         if (error.response.status === 500) {
           alert(
-            'An error occured while trying to fetch the posts, please refresh the page'
+            'An error occurred while trying to fetch the posts, please refresh the page'
           );
         }
       });
@@ -188,7 +188,7 @@ export default function BoxPost({ post, user }) {
   return (
     <Post>
       <ImageProfile>
-        <img src={post.pictureUrl} alt="profile" />
+        <img src={post.pictureUrl} alt='profile' />
         <div>
           {postLikes.liked ? (
             <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
@@ -223,7 +223,7 @@ export default function BoxPost({ post, user }) {
               disabled={disabledEdition}
               onChange={(e) => setTextEdited(e.target.value)}
               value={textEdited}
-              type="text"
+              type='text'
               onKeyUp={(event) => editionPostText(event, post.id)}
             />
           ) : (
@@ -242,7 +242,7 @@ export default function BoxPost({ post, user }) {
             <h2>{post.description}</h2>
             <h3>{post.link}</h3>
           </Data>
-          {regex.test(post.image) ? <img src={post.image} alt="link" /> : <></>}
+          {regex.test(post.image) ? <img src={post.image} alt='link' /> : <></>}
         </Url>
       </PostContent>
     </Post>
