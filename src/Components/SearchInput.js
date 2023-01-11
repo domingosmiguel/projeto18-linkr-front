@@ -9,10 +9,10 @@ export default function SearchInput({ headers }) {
   const [users, setUsers] = useState([]);
   const [data, updateData, setData] = useForm({ search: '' }, setUsers);
 
-  function handleAnswerChange(event) {
+  function handleEvent(event) {
     if (event.key === 'Escape') {
       event.target.value = '';
-      updateData(event);
+      setUsers([]);
       event.target.blur();
     }
   }
@@ -26,21 +26,20 @@ export default function SearchInput({ headers }) {
           type='text'
           debounceTimeout={300}
           onChange={(e) => updateData(e, headers)}
+          onClick={(e) => updateData(e, headers)}
           value={data.search}
-          onKeyUp={handleAnswerChange}
+          onKeyUp={handleEvent}
+          onBlur={() => {
+            setTimeout(() => {
+              setData({ search: '' });
+              setUsers([]);
+            }, 100);
+          }}
         />
         <AiOutlineSearch />
       </InputContainer>
       {users.map((user) => (
-        <UserCard
-          key={user.id}
-          following={user.following}
-          user={user}
-          resetInput={() => {
-            setData({ search: '' });
-            setUsers([]);
-          }}
-        />
+        <UserCard key={user.id} following={user.following} user={user} />
       ))}
     </SearchResults>
   );

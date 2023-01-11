@@ -4,11 +4,9 @@ import styled from 'styled-components';
 export default function UserCard({
   following,
   user: { id, username, pictureUrl },
-  resetInput,
 }) {
   const navigate = useNavigate();
   const handleClick = () => {
-    resetInput();
     navigate(`/user/${id}`);
   };
   return (
