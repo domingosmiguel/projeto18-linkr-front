@@ -357,7 +357,7 @@ const Text = styled.div`
 `;
 const Url = styled.div`
   width: 503px;
-  border: 1px solid #4d4d4d;
+  border: 1px solid #333333;
   border-radius: 14px;
   display: flex;
   justify-content: space-between;
