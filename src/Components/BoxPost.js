@@ -19,6 +19,7 @@ export default function BoxPost({ post, user }) {
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
   const [comments, setComments] = useState(false);
+  const [commentId, setCommentId] = useState("");
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -53,7 +54,8 @@ export default function BoxPost({ post, user }) {
     if (comments) {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${post.id}`, config)
       .then((res)=>{
-        console.log(res.data)
+        console.log(res.data);
+        setCommentId(res.data)
       })
       .catch((err)=>{
         console.log(err.response)
@@ -266,7 +268,7 @@ export default function BoxPost({ post, user }) {
         </Url>
       </PostContent>
     </Post>
-    <BoxComments open={comments} postId={post.id}/>
+    <BoxComments open={comments} postId={post.id} commentId={commentId}/>
     </ContainerBoxPost>
   );
 }

@@ -2,38 +2,51 @@ import styled from "styled-components";
 import axios from "axios";
 import { FiSend } from "react-icons/fi"
 import { useState } from "react";
+import { ThreeDots } from  'react-loader-spinner'
 
-export default function BoxComments({open, postId}) {
+export default function BoxComments({ open, postId, commentId }) {
     const [comment, setComment] = useState("");
     const [disabled, setDisabled] = useState(false);
     const config = {
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      };
+    };
     const array = [1, 2, 3, 4];
+    console.log(commentId)
 
-    function publishComment(){
+    function publishComment() {
         setDisabled(true)
         const body = { comment }
-        
+
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${postId}`, body, config)
-        .then((res)=>{
-            console.log(res.data)
-            setDisabled(false)
-            setComment("")
-        })
-        .catch((err)=>{
-            console.log(err.response)
-            setDisabled(false)
-            setComment("")
-        })
+            .then((res) => {
+                console.log(res.data)
+                setDisabled(false)
+                setComment("")
+            })
+            .catch((err) => {
+                console.log(err.response)
+                setDisabled(false)
+                setComment("")
+            })
     }
 
     return (
         <ContainerBoxComments open={open}>
-            {
-                array.map(
+            {commentId === "" ?
+                <ThreeDots 
+                height="50" 
+                width="50" 
+                radius="9"
+                color="#353535" 
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+                 />
+                :
+                commentId.map(
                     (c) => <BoxComment>
                         <Comment>
                             <img alt="profile" src="https://images.unsplash.com/photo-1611915387288-fd8d2f5f928b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80" />
@@ -43,7 +56,7 @@ export default function BoxComments({open, postId}) {
                                     <span> •  following</span>
                                 </div>
                                 <span>
-                                    Adorei esse post, ajuda muito a usar Material UI com React!
+                                    {c.txt}
                                 </span>
                             </TextComment>
                         </Comment>
@@ -55,13 +68,13 @@ export default function BoxComments({open, postId}) {
                 <img alt="profile" src="https://images.unsplash.com/photo-1611915387288-fd8d2f5f928b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80" />
                 <InputWrite>
                     <input
-                        onChange={(e)=>setComment(e.target.value)}
+                        onChange={(e) => setComment(e.target.value)}
                         value={comment}
                         type="text"
-                        placeholder="write a comment..." 
+                        placeholder="write a comment..."
                         disabled={disabled}
-                        />
-                    <FiSend onClick={publishComment}/>
+                    />
+                    <FiSend onClick={publishComment} />
                 </InputWrite>
 
             </WriteComment>
@@ -79,7 +92,7 @@ const ContainerBoxComments = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    display: ${(props)=>props.open===true? "":"none"};
+    display: ${(props) => props.open === true ? "" : "none"};
 `
 const BoxComment = styled.div`
     width: 100%;
