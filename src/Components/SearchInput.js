@@ -21,7 +21,7 @@ export default function SearchInput({ headers }) {
       <InputContainer>
         <DebounceInput
           element={MyInput}
-          placeholder='Search for people'
+          placeholder='Search for people and friends'
           name='search'
           type='text'
           debounceTimeout={300}
