@@ -223,7 +223,7 @@ export default function BoxPost({ post, user }) {
         </div>
         <div>
           <AiOutlineComment onClick={()=> setComments(!comments)}/>
-          <p>0 comments</p>
+          <p>{commentId.length} comments</p>
         </div>
       </ImageProfile>
       <PostContent>
