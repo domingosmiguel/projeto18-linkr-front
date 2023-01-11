@@ -1,9 +1,35 @@
 import styled from "styled-components";
 import axios from "axios";
 import { FiSend } from "react-icons/fi"
+import { useState } from "react";
 
-export default function BoxComments({open}) {
+export default function BoxComments({open, postId}) {
+    const [comment, setComment] = useState("");
+    const [disabled, setDisabled] = useState(false);
+    const config = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      };
     const array = [1, 2, 3, 4];
+
+    function publishComment(){
+        setDisabled(true)
+        const body = { comment }
+        
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${postId}`, body, config)
+        .then((res)=>{
+            console.log(res.data)
+            setDisabled(false)
+            setComment("")
+        })
+        .catch((err)=>{
+            console.log(err.response)
+            setDisabled(false)
+            setComment("")
+        })
+    }
+
     return (
         <ContainerBoxComments open={open}>
             {
@@ -29,9 +55,13 @@ export default function BoxComments({open}) {
                 <img alt="profile" src="https://images.unsplash.com/photo-1611915387288-fd8d2f5f928b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80" />
                 <InputWrite>
                     <input
+                        onChange={(e)=>setComment(e.target.value)}
+                        value={comment}
                         type="text"
-                        placeholder="write a comment..." />
-                    <FiSend />
+                        placeholder="write a comment..." 
+                        disabled={disabled}
+                        />
+                    <FiSend onClick={publishComment}/>
                 </InputWrite>
 
             </WriteComment>
@@ -170,6 +200,10 @@ const InputWrite = styled.div`
             line-height: 17px;
             letter-spacing: 0.05em;
             color: #575757;
+        }
+        &:disabled{
+            color: #000000;
+            cursor: not-allowed;
         }
     }
     svg{
