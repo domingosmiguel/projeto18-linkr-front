@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
+import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import FollowButton from './FollowButton';
 import {
@@ -63,6 +64,7 @@ export default function UserTimeline() {
     <ContainerTimeline>
       <Header user={user} sessionId={sessionId} />
       <ContainerPostsAndTrending>
+        <SearchInput headers={config.headers} />
         <ContainerPosts>
           <ContainerImgNameUser>
             <TittlePosts>

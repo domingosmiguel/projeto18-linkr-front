@@ -1,15 +1,10 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { DebounceInput } from 'react-debounce-input';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import useForm from '../hooks/useForm';
-import UserCard from './userCard';
 
 export default function Header({ user, sessionId }) {
   const [isOpen, setOpen] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [data, updateData, setData] = useForm({ search: '' }, setUsers);
   const navigate = useNavigate();
   const config = {
     headers: {
@@ -22,7 +17,7 @@ export default function Header({ user, sessionId }) {
       { sessionId, userId: user.id },
       config
     );
-    promise.then((response) => {
+    promise.then(() => {
       localStorage.clear();
       navigate('/');
     });
@@ -32,39 +27,10 @@ export default function Header({ user, sessionId }) {
       );
     });
   }
-  function handleAnswerChange(event) {
-    if (event.key === 'Escape') {
-      event.target.value = '';
-      updateData(event);
-      event.target.blur();
-    }
-  }
+
   return (
     <Container>
       <Logo onClick={() => navigate('/timeline')}>Linkr</Logo>
-      <SearchResults>
-        <DebounceInput
-          element={SearchInput}
-          placeholder='Search for people'
-          name='search'
-          type='text'
-          debounceTimeout={300}
-          onChange={(e) => updateData(e, config.headers)}
-          value={data.search}
-          onKeyUp={handleAnswerChange}
-        />
-        {users.map((user) => (
-          <UserCard
-            key={user.id}
-            following={user.following}
-            user={user}
-            resetInput={() => {
-              setData({ search: '' });
-              setUsers([]);
-            }}
-          />
-        ))}
-      </SearchResults>
       <User isOpen={isOpen}>
         <Main>
           <ion-icon
@@ -94,35 +60,6 @@ const Container = styled.div`
   background-color: #151515;
   box-sizing: border-box;
   padding-left: 28px;
-`;
-
-const SearchResults = styled.div`
-  background-color: #e7e7e7;
-  border-radius: 8px;
-  position: absolute;
-  width: 100%;
-  max-width: 563px;
-  top: 14px;
-  left: 50%;
-  margin-left: calc(-563px / 2);
-
-  @media (max-width: 974px) {
-    top: 85px;
-  }
-`;
-
-const SearchInput = styled.input`
-  width: 100%;
-  max-width: 563px;
-  height: 45px;
-  background: #ffffff;
-  border-radius: 8px;
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 19px;
-  line-height: 23px;
-  padding: 0 17px;
 `;
 
 const User = styled.div`

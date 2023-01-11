@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const ContainerTimeline = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #4d4d4d;
+  background-color: #333333;
   display: flex;
   justify-content: center;
   align-items: center;

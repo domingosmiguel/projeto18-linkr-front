@@ -63,35 +63,36 @@ const Form = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
-  input {
+
+  input,
+  button {
     font-family: 'Oswald';
     font-style: normal;
     font-weight: 700;
     font-size: 27px;
+    line-height: 40px;
     width: 100%;
     max-width: 429px;
     height: 65px;
-    color: black;
-    padding-left: 10px;
-    box-sizing: border-box;
     border-radius: 6px;
     border: none;
   }
+
+  input {
+    color: #000000;
+    padding-left: 10px;
+
+    ::placeholder {
+      color: #9f9f9f;
+    }
+  }
   button {
-    width: 100%;
-    max-width: 429px;
-    height: 65px;
     color: white;
     text-align: center;
-    font-family: 'Oswald';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 27px;
-    border: none;
     background: #1877f2;
-    border-radius: 6px;
     margin-top: 2px;
     margin-bottom: 2px;
+
     :hover {
       text-decoration: underline;
       font-size: 28px;
@@ -99,9 +100,11 @@ const Form = styled.div`
     }
   }
   h2 {
+    font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
+    line-height: 24px;
     text-decoration: underline;
     color: white;
     :hover {
