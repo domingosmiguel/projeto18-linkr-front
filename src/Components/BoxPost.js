@@ -10,22 +10,16 @@ import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 
-export default function BoxPost({ post, user }) {
+export default function BoxPost({ headers, post, user }) {
   const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
   const inputRef = useRef(null);
   const [editing, setEditing] = useState(false);
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
+  const navigate = useNavigate();
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
-
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
-    },
-  };
-  const navigate = useNavigate();
 
   const [postLikes, setPostLikes] = useState({
     count: 0,
@@ -36,10 +30,6 @@ export default function BoxPost({ post, user }) {
     setEditing(!editing);
     setIdEdition(id);
   }
-
-  const headers = {
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
-  };
 
   useEffect(() => {
     if (editing) {
@@ -82,9 +72,9 @@ export default function BoxPost({ post, user }) {
         .patch(
           `${process.env.REACT_APP_BACKEND_URL}/post-edition/${id}`,
           body,
-          config
+          { headers }
         )
-        .then((res) => {
+        .then(() => {
           setDisabledEdition(true);
           updateTimeline();
         })
@@ -102,7 +92,7 @@ export default function BoxPost({ post, user }) {
 
   function updateTimeline() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, { headers })
       .then((response) => {
         setPosts(response.data.posts);
         setHashtags(response.data.hashtags);

@@ -3,14 +3,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default function Header({ user, sessionId }) {
+export default function Header({ config, deleteToken, user, sessionId }) {
   const [isOpen, setOpen] = useState(false);
   const navigate = useNavigate();
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
-    },
-  };
+
   function handleLogout() {
     const promise = axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/logout`,
@@ -18,7 +14,7 @@ export default function Header({ user, sessionId }) {
       config
     );
     promise.then(() => {
-      localStorage.clear();
+      deleteToken();
       navigate('/');
     });
     promise.catch((error) => {

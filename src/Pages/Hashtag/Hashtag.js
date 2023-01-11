@@ -60,18 +60,13 @@ const TittlePosts = styled.div`
   color: #ffffff;
 `;
 
-export default function Hashtag() {
+export default function Hashtag({ config, deleteToken }) {
   const { hashtag } = useParams();
   const [posts, setPosts] = useState('');
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [hashtags, setHashtags] = useState([]);
   const navigate = useNavigate();
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
-    },
-  };
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}`, config)
@@ -84,7 +79,7 @@ export default function Hashtag() {
       .catch((err) => {
         console.log(err.response.data);
         if (err.response.status === 401) {
-          localStorage.clear();
+          deleteToken();
           navigate('/');
         }
       });
@@ -92,7 +87,12 @@ export default function Hashtag() {
 
   return (
     <ContainerTimeline>
-      <Header user={user} sessionId={sessionId} />
+      <Header
+        config={config}
+        deleteToken={deleteToken}
+        user={user}
+        sessionId={sessionId}
+      />
       <ContainerPostsAndTrending>
         <SearchInput headers={config.headers} />
         <ContainerPosts>
@@ -102,7 +102,14 @@ export default function Hashtag() {
           ) : posts.length === 0 ? (
             'There are no posts yet'
           ) : (
-            posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)
+            posts.map((p, idx) => (
+              <BoxPost
+                headers={config.headers}
+                user={user}
+                post={p}
+                key={idx}
+              />
+            ))
           )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />
