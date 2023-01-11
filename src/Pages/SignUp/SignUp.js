@@ -63,35 +63,36 @@ const Form = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
-  input {
+
+  input,
+  button {
     font-family: 'Oswald';
     font-style: normal;
     font-weight: 700;
     font-size: 27px;
+    line-height: 40px;
     width: 100%;
     max-width: 429px;
     height: 65px;
-    color: black;
-    padding-left: 10px;
-    box-sizing: border-box;
     border-radius: 6px;
     border: none;
   }
+
+  input {
+    color: #000000;
+    padding-left: 10px;
+
+    ::placeholder {
+      color: #9f9f9f;
+    }
+  }
   button {
-    width: 100%;
-    max-width: 429px;
-    height: 65px;
     color: white;
     text-align: center;
-    font-family: 'Oswald';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 27px;
-    border: none;
     background: #1877f2;
-    border-radius: 6px;
     margin-top: 2px;
     margin-bottom: 2px;
+
     :hover {
       text-decoration: underline;
       font-size: 28px;
@@ -99,9 +100,11 @@ const Form = styled.div`
     }
   }
   h2 {
+    font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
+    line-height: 24px;
     text-decoration: underline;
     color: white;
     :hover {
@@ -145,14 +148,14 @@ function SignUp() {
       return alert('Password must have between 6 and 50 characters!');
     if (username && email && password && pictureUrl) {
       setAwaiting(true);
-      const promisse = axios.post(
+      const promise = axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/signup`,
         { username, email, password, pictureUrl }
       );
-      promisse.then((response) => {
+      promise.then((response) => {
         navigate('/');
       });
-      promisse.catch((error) => {
+      promise.catch((error) => {
         if (error.response.status === 400) {
           alert('The e-mail entered is already registered!');
         } else {
@@ -177,26 +180,26 @@ function SignUp() {
       </CompanyInfo>
       <Form>
         <input
-          placeholder="e-mail"
+          placeholder='e-mail'
           onChange={(event) => setEmail(event.target.value)}
         ></input>
         <input
-          type="password"
-          placeholder="password"
+          type='password'
+          placeholder='password'
           onChange={(event) => setPassword(event.target.value)}
         ></input>
         <input
-          placeholder="username"
+          placeholder='username'
           onChange={(event) => setUsername(event.target.value)}
         ></input>
         <input
-          placeholder="picture url"
+          placeholder='picture url'
           onChange={(event) => setPictureUrl(event.target.value)}
         ></input>
         <button onClick={handleSignUp} disabled={isAwating}>
           Sign Up
         </button>
-        <Link to="/" relative="path">
+        <Link to='/' relative='path'>
           <h2>Switch back to log in</h2>
         </Link>
       </Form>
