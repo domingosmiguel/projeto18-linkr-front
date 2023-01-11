@@ -49,6 +49,19 @@ export default function BoxPost({ post, user }) {
     }
   }, [editing]);
 
+  useEffect(()=>{
+    if (comments) {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${post.id}`, config)
+      .then((res)=>{
+        console.log(res.data)
+      })
+      .catch((err)=>{
+        console.log(err.response)
+      })
+    }
+  },
+  [comments])
+
   useEffect(() => {
     (async () => {
       try {
