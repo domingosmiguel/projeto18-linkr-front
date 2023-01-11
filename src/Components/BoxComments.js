@@ -12,8 +12,6 @@ export default function BoxComments({ open, postId, commentId }) {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
     };
-    const array = [1, 2, 3, 4];
-    console.log(commentId)
 
     function publishComment() {
         setDisabled(true)
