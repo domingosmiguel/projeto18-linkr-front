@@ -4,7 +4,7 @@ import { FiSend } from "react-icons/fi"
 import { useState } from "react";
 import { ThreeDots } from  'react-loader-spinner'
 
-export default function BoxComments({ open, postId, commentId, setCommentId }) {
+export default function BoxComments({ open, postId, commentId, setCommentId, user }) {
     const [comment, setComment] = useState("");
     const [disabled, setDisabled] = useState(false);
     const config = {
@@ -60,10 +60,10 @@ export default function BoxComments({ open, postId, commentId, setCommentId }) {
                 commentId.map(
                     (c) => <BoxComment>
                         <Comment>
-                            <img alt="profile" src="https://images.unsplash.com/photo-1611915387288-fd8d2f5f928b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80" />
+                            <img alt="profile" src={c.pictureUrl} />
                             <TextComment>
                                 <div>
-                                    <p>Nina</p>
+                                    <p>{c.username}</p>
                                     <span> •  following</span>
                                 </div>
                                 <span>
@@ -76,7 +76,7 @@ export default function BoxComments({ open, postId, commentId, setCommentId }) {
                 )
             }
             <WriteComment>
-                <img alt="profile" src="https://images.unsplash.com/photo-1611915387288-fd8d2f5f928b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80" />
+                <img alt="profile" src={user.pictureUrl} />
                 <InputWrite>
                     <input
                         onChange={(e) => setComment(e.target.value)}
@@ -94,12 +94,13 @@ export default function BoxComments({ open, postId, commentId, setCommentId }) {
 }
 
 const ContainerBoxComments = styled.div`
+    z-index: 0;
+    box-sizing: border-box;
+    padding-top: 35px;
     width: 100%;
     background: #1E1E1E;
-    border-radius: 16px;
-    /* position: absolute;
-    top:80%;
-    left: 0; */
+    border-radius: 0 0 16px 16px;
+    margin-top: -2em;
     display: flex;
     flex-direction: column;
     align-items: center;
