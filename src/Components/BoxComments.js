@@ -60,10 +60,10 @@ export default function BoxComments({ open, postId, commentId, setCommentId }) {
                 commentId.map(
                     (c) => <BoxComment>
                         <Comment>
-                            <img alt="profile" src="https://images.unsplash.com/photo-1611915387288-fd8d2f5f928b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80" />
+                            <img alt="profile" src={c.pictureUrl} />
                             <TextComment>
                                 <div>
-                                    <p>Nina</p>
+                                    <p>{c.username}</p>
                                     <span> •  following</span>
                                 </div>
                                 <span>
