@@ -18,6 +18,7 @@ export default function BoxPost({ post, user }) {
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
+  const [comments, setComments] = useState(false);
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -206,7 +207,7 @@ export default function BoxPost({ post, user }) {
           />
         </div>
         <div>
-          <AiOutlineComment />
+          <AiOutlineComment onClick={()=> setComments(!comments)}/>
           <p>0 comments</p>
         </div>
       </ImageProfile>
@@ -252,7 +253,7 @@ export default function BoxPost({ post, user }) {
         </Url>
       </PostContent>
     </Post>
-    <BoxComments></BoxComments>
+    <BoxComments open={comments}/>
     </ContainerBoxPost>
   );
 }
