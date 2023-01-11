@@ -9,15 +9,15 @@ export default function SearchInput({ headers }) {
   const [users, setUsers] = useState([]);
   const [data, updateData, setData] = useForm({ search: '' }, setUsers);
 
-  function handleAnswerChange(event) {
+  function handleEvent(event) {
     if (event.key === 'Escape') {
       event.target.value = '';
-      updateData(event);
+      setUsers([]);
       event.target.blur();
     }
   }
   return (
-    <SearchResults>
+    <Positioner>
       <InputContainer>
         <DebounceInput
           element={MyInput}
@@ -26,27 +26,62 @@ export default function SearchInput({ headers }) {
           type='text'
           debounceTimeout={300}
           onChange={(e) => updateData(e, headers)}
+          onClick={(e) => updateData(e, headers)}
           value={data.search}
-          onKeyUp={handleAnswerChange}
+          onKeyUp={handleEvent}
+          onBlur={() => {
+            setTimeout(() => {
+              setData({ search: '' });
+              setUsers([]);
+            }, 100);
+          }}
         />
         <AiOutlineSearch />
       </InputContainer>
-      {users.map((user) => (
-        <UserCard
-          key={user.id}
-          following={user.following}
-          user={user}
-          resetInput={() => {
-            setData({ search: '' });
-            setUsers([]);
-          }}
-        />
-      ))}
-    </SearchResults>
+      <ScrollContainer length={users.length}>
+        <ResultsContainer>
+          {users.slice(0, 10).map((user) => (
+            <UserCard key={user.id} following={user.following} user={user} />
+          ))}
+        </ResultsContainer>
+      </ScrollContainer>
+    </Positioner>
   );
 }
+const ScrollContainer = styled.div`
+  position: relative;
 
-const SearchResults = styled.div`
+  height: ${({ length }) => {
+    let height = 0;
+    if (length) {
+      height += 14 + length * 53;
+    }
+    return height + 'px';
+  }};
+  max-height: 332px;
+
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: block;
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 20px;
+    border: 3px solid #e7e7e7;
+  }
+`;
+const ResultsContainer = styled.div`
+  position: absolute;
+  width: 100%;
+`;
+const Positioner = styled.div`
   background-color: #e7e7e7;
   border-radius: 8px;
   position: fixed;

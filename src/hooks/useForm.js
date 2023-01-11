@@ -7,7 +7,7 @@ export default function useForm(initialValue, setUsers) {
   const updateForm = async (e, headers) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     try {
-      if (e.target.value.length >= 3) {
+      if (e.target.value.length >= 3 || e.target.value.length === 0) {
         const { data: users } = await axios.request({
           baseURL: process.env.REACT_APP_BACKEND_URL,
           url: '/usernames',
@@ -16,8 +16,6 @@ export default function useForm(initialValue, setUsers) {
           headers,
         });
         setUsers(users);
-      } else {
-        setUsers([]);
       }
     } catch (error) {
       console.log(error);
