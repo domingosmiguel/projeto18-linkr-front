@@ -5,7 +5,7 @@ import useInterval from 'use-interval';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
-import ModalDelete from '../../Components/Modal';
+import ModalDelete from '../../Components/ModalDelete';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
@@ -23,7 +23,7 @@ import {
   TittlePosts,
 } from './TimelineStyle';
 
-export default function TimelinePage() {
+export default function TimelinePage({ config, deleteToken }) {
   const {
     posts,
     setPosts,
@@ -36,16 +36,10 @@ export default function TimelinePage() {
     hashtags,
     setHashtags,
   } = useContext(DadosContext);
-  console.log('🚀 ~ file: TimelinePage.js:36 ~ TimelinePage ~ posts', posts);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [following, setFollowing] = useState([]);
   const [newPostsNumber, setNewPostsNumber] = useState(0);
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
-    },
-  };
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,7 +54,7 @@ export default function TimelinePage() {
       })
       .catch((err) => {
         if (err.response?.status === 401) {
-          localStorage.clear();
+          deleteToken();
           navigate('/');
         }
         if (err.response?.status === 500) {
@@ -109,7 +103,7 @@ export default function TimelinePage() {
         setLinkPost('');
         setTextPost('');
         if (err.response.status === 401) {
-          localStorage.clear();
+          deleteToken();
           navigate('/');
         }
         if (err.response.status === 400) {
@@ -135,7 +129,7 @@ export default function TimelinePage() {
       .catch((err) => {
         console.log(err.response.status);
         if (err.response.status === 401) {
-          localStorage.clear();
+          deleteToken();
           navigate('/');
         }
         if (err.response.status === 500) {
@@ -148,7 +142,12 @@ export default function TimelinePage() {
 
   return (
     <ContainerTimeline>
-      <Header user={user} sessionId={sessionId} />
+      <Header
+        config={config}
+        deleteToken={deleteToken}
+        user={user}
+        sessionId={sessionId}
+      />
       <ContainerPostsAndTrending>
         <SearchInput headers={config.headers} />
         <ContainerPosts>
@@ -181,7 +180,7 @@ export default function TimelinePage() {
               </ContainerInputs>
             </BoxInputs>
           </form>
-          <ModalDelete />
+          <ModalDelete config={config} />
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new posts, load more!{' '}
             <ion-icon name='refresh'></ion-icon>
@@ -195,7 +194,14 @@ export default function TimelinePage() {
               'No posts found from your friends'
             )
           ) : (
-            posts.map((p, idx) => <BoxPost user={user} post={p} key={idx} />)
+            posts.map((p, idx) => (
+              <BoxPost
+                headers={config.headers}
+                user={user}
+                post={p}
+                key={idx}
+              />
+            ))
           )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />

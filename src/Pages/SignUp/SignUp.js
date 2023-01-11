@@ -129,7 +129,7 @@ const Form = styled.div`
   }
 `;
 
-function SignUp() {
+function SignUp({ logged }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -137,7 +137,7 @@ function SignUp() {
   const [isAwating, setAwaiting] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
-    if (localStorage.token) {
+    if (logged) {
       navigate('/timeline');
     }
   });
@@ -152,7 +152,7 @@ function SignUp() {
         `${process.env.REACT_APP_BACKEND_URL}/signup`,
         { username, email, password, pictureUrl }
       );
-      promise.then((response) => {
+      promise.then(() => {
         navigate('/');
       });
       promise.catch((error) => {

@@ -2,7 +2,7 @@ import axios from 'axios';
 import 'linkify-plugin-hashtag';
 import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
 import { Link, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
@@ -11,24 +11,18 @@ import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 import BoxComments from './BoxComments';
 
-export default function BoxPost({ post, user }) {
+export default function BoxPost({ headers, post, user }) {
   const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
   const inputRef = useRef(null);
   const [editing, setEditing] = useState(false);
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
+  const navigate = useNavigate();
   const [comments, setComments] = useState(false);
-  const [commentId, setCommentId] = useState("");
+  const [commentId, setCommentId] = useState('');
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
-
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
-    },
-  };
-  const navigate = useNavigate();
 
   const [postLikes, setPostLikes] = useState({
     count: 0,
@@ -40,29 +34,27 @@ export default function BoxPost({ post, user }) {
     setIdEdition(id);
   }
 
-  const headers = {
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
-  };
-
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
     }
   }, [editing]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (comments) {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${post.id}`, config)
-      .then((res)=>{
-        console.log(res.data);
-        setCommentId(res.data)
-      })
-      .catch((err)=>{
-        console.log(err.response)
-      })
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${post.id}`, {
+          headers,
+        })
+        .then((res) => {
+          console.log(res.data);
+          setCommentId(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     }
-  },
-  [comments])
+  }, [comments]);
 
   useEffect(() => {
     (async () => {
@@ -99,9 +91,9 @@ export default function BoxPost({ post, user }) {
         .patch(
           `${process.env.REACT_APP_BACKEND_URL}/post-edition/${id}`,
           body,
-          config
+          { headers }
         )
-        .then((res) => {
+        .then(() => {
           setDisabledEdition(true);
           updateTimeline();
         })
@@ -119,7 +111,7 @@ export default function BoxPost({ post, user }) {
 
   function updateTimeline() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, { headers })
       .then((response) => {
         setPosts(response.data.posts);
         setHashtags(response.data.hashtags);
@@ -151,18 +143,20 @@ export default function BoxPost({ post, user }) {
       if (postLikes.liked) {
         txt = 'You';
         if (postLikes.users.length === 2 && postLikes.count >= 2) {
-          txt += `, ${postLikes.users[0]} and other ${postLikes.count - 2 > 1
+          txt += `, ${postLikes.users[0]} and other ${
+            postLikes.count - 2 > 1
               ? `${postLikes.count - 2} people`
               : '1 person'
-            }`;
+          }`;
         } else if (postLikes.users.length === 1) {
           txt += ` and ${postLikes.users[0]}`;
         }
       } else if (postLikes.users.length === 1) {
         txt += postLikes.users[0];
       } else if (postLikes.users.length === 2 && postLikes.count > 2) {
-        txt += `${postLikes.users[0]}, ${postLikes.users[1]} and other ${postLikes.count - 2 > 1 ? `${postLikes.count - 2} people` : '1 person'
-          }`;
+        txt += `${postLikes.users[0]}, ${postLikes.users[1]} and other ${
+          postLikes.count - 2 > 1 ? `${postLikes.count - 2} people` : '1 person'
+        }`;
       } else {
         txt += `${postLikes.users[0]} and ${postLikes.users[1]}`;
       }
@@ -202,77 +196,82 @@ export default function BoxPost({ post, user }) {
 
   return (
     <ContainerBoxPost>
-    <Post>
-      <ImageProfile>
-        <img src={post.pictureUrl} alt='profile' />
-        <div>
-          {postLikes.liked ? (
-            <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
-          ) : (
-            <AiOutlineHeart onClick={like} />
-          )}
-          <p id={`post-likes-info-${post.id}`}>
-            {postLikes.count} Like{postLikes.count !== 1 && 's'}
-          </p>
-          <TooltipEdit
-            variant='light'
-            place='bottom'
-            anchorId={`post-likes-info-${post.id}`}
-            content={tooltipTxt()}
-          />
-        </div>
-        <div>
-          <AiOutlineComment onClick={()=> setComments(!comments)}/>
-          <p>0 comments</p>
-        </div>
-      </ImageProfile>
-      <PostContent>
-        <BoxNameIcons>
-          <Link to={`/user/${post.userId}`}>
-            <span>{post.username}</span>
-          </Link>
-          {user.id === post.userId && (
-            <BoxIcons>
-              <HiPencilAlt onClick={() => makeEdition(post.id)} />
-              <HiTrash onClick={() => openModal(post.id)} />
-            </BoxIcons>
-          )}
-        </BoxNameIcons>
-        {idEdition === post.id ? (
-          editing === true ? (
-            <InputEdition
-              ref={inputRef}
-              disabled={disabledEdition}
-              onChange={(e) => setTextEdited(e.target.value)}
-              value={textEdited}
-              type='text'
-              onKeyUp={(event) => editionPostText(event, post.id)}
+      <Post>
+        <ImageProfile>
+          <img src={post.pictureUrl} alt='profile' />
+          <div>
+            {postLikes.liked ? (
+              <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
+            ) : (
+              <AiOutlineHeart onClick={like} />
+            )}
+            <p id={`post-likes-info-${post.id}`}>
+              {postLikes.count} Like{postLikes.count !== 1 && 's'}
+            </p>
+            <TooltipEdit
+              variant='light'
+              place='bottom'
+              anchorId={`post-likes-info-${post.id}`}
+              content={tooltipTxt()}
             />
+          </div>
+          <div>
+            <AiOutlineComment onClick={() => setComments(!comments)} />
+            <p>0 comments</p>
+          </div>
+        </ImageProfile>
+        <PostContent>
+          <BoxNameIcons>
+            <Link to={`/user/${post.userId}`}>
+              <span>{post.username}</span>
+            </Link>
+            {user.id === post.userId && (
+              <BoxIcons>
+                <HiPencilAlt onClick={() => makeEdition(post.id)} />
+                <HiTrash onClick={() => openModal(post.id)} />
+              </BoxIcons>
+            )}
+          </BoxNameIcons>
+          {idEdition === post.id ? (
+            editing === true ? (
+              <InputEdition
+                ref={inputRef}
+                disabled={disabledEdition}
+                onChange={(e) => setTextEdited(e.target.value)}
+                value={textEdited}
+                type='text'
+                onKeyUp={(event) => editionPostText(event, post.id)}
+              />
+            ) : (
+              <Text>
+                <Linkify options={options}>{post.txt}</Linkify>
+              </Text>
+            )
           ) : (
             <Text>
               <Linkify options={options}>{post.txt}</Linkify>
             </Text>
-          )
-        ) : (
-          <Text>
-            <Linkify options={options}>{post.txt}</Linkify>
-          </Text>
-        )}
-        <Url onClick={() => window.open(post.link)}>
-          <Data>
-            <h1>{post.title}</h1>
-            <h2>{post.description}</h2>
-            <h3>{post.link}</h3>
-          </Data>
-          {regex.test(post.image) ? <img src={post.image} alt='link' /> : <></>}
-        </Url>
-      </PostContent>
-    </Post>
-    <BoxComments 
-      open={comments} 
-      postId={post.id} 
-      commentId={commentId}
-      setCommentId={setCommentId}/>
+          )}
+          <Url onClick={() => window.open(post.link)}>
+            <Data>
+              <h1>{post.title}</h1>
+              <h2>{post.description}</h2>
+              <h3>{post.link}</h3>
+            </Data>
+            {regex.test(post.image) ? (
+              <img src={post.image} alt='link' />
+            ) : (
+              <></>
+            )}
+          </Url>
+        </PostContent>
+      </Post>
+      <BoxComments
+        open={comments}
+        postId={post.id}
+        commentId={commentId}
+        setCommentId={setCommentId}
+      />
     </ContainerBoxPost>
   );
 }
@@ -292,7 +291,7 @@ const ContainerBoxPost = styled.div`
     width: 100%;
     border-radius: 0;
   }
-`
+`;
 const TooltipEdit = styled(Tooltip)`
   z-index: 2;
   font-family: 'Lato';

@@ -15,18 +15,13 @@ import {
   TittlePosts,
 } from './UserTimelineStyle';
 
-export default function UserTimeline() {
+export default function UserTimeline({ config, deleteToken }) {
   const { id } = useParams();
   const [timelinePosts, setTimelinePosts] = useState('');
   const [timelineUser, setTimelineUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [user, setUser] = useState({});
   const [hashtags, setHashtags] = useState([]);
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
-    },
-  };
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +44,7 @@ export default function UserTimeline() {
       .catch((error) => {
         console.log(error);
         if (error.response?.status === 401) {
-          localStorage.clear();
+          deleteToken();
           navigate('/');
         }
         if (error.response?.status === 500) {
@@ -62,7 +57,12 @@ export default function UserTimeline() {
 
   return (
     <ContainerTimeline>
-      <Header user={user} sessionId={sessionId} />
+      <Header
+        config={config}
+        deleteToken={deleteToken}
+        user={user}
+        sessionId={sessionId}
+      />
       <ContainerPostsAndTrending>
         <SearchInput headers={config.headers} />
         <ContainerPosts>
@@ -78,11 +78,18 @@ export default function UserTimeline() {
             'There are no posts yet'
           ) : (
             timelinePosts.map((post) => (
-              <BoxPost user={user} post={post} key={post.id} />
+              <BoxPost
+                headers={config.headers}
+                user={user}
+                post={post}
+                key={post.id}
+              />
             ))
           )}
         </ContainerPosts>
-        {timelineUser.id !== user.id && <FollowButton />}
+        {timelineUser.id !== user.id && (
+          <FollowButton headers={config.headers} />
+        )}
         <Trending hashtags={hashtags} />
       </ContainerPostsAndTrending>
     </ContainerTimeline>

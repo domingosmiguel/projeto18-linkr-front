@@ -4,14 +4,10 @@ import ReactLoading from 'react-loading';
 import { useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-export default function FollowButton() {
+export default function FollowButton({ headers }) {
   const [follow, setFollow] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const { id } = useParams();
-
-  const headers = {
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
-  };
 
   useEffect(() => {
     (async () => {
