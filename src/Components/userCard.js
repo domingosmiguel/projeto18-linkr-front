@@ -21,12 +21,18 @@ export default function UserCard({
 const Card = styled.div`
   cursor: pointer;
   height: fit-content;
-  width: 563px;
+  max-width: 100%;
   padding: 14px 17px 7px;
   display: flex;
   align-items: center;
 
+  :nth-child(n + 2) {
+    padding: 7px 17px 7px;
+  }
   :last-child {
+    padding: 7px 17px 14px;
+  }
+  :only-child {
     padding: 14px 17px 14px;
   }
 
