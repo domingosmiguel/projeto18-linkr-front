@@ -2,13 +2,14 @@ import axios from 'axios';
 import 'linkify-plugin-hashtag';
 import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
 import { Link, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
+import BoxComments from './BoxComments';
 
 export default function BoxPost({ post, user }) {
   const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
@@ -17,6 +18,8 @@ export default function BoxPost({ post, user }) {
   const [idEdition, setIdEdition] = useState('');
   const [textEdited, setTextEdited] = useState(post.txt);
   const [disabledEdition, setDisabledEdition] = useState(false);
+  const [comments, setComments] = useState(false);
+  const [commentId, setCommentId] = useState("");
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -46,6 +49,20 @@ export default function BoxPost({ post, user }) {
       inputRef.current.focus();
     }
   }, [editing]);
+
+  useEffect(()=>{
+    if (comments) {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${post.id}`, config)
+      .then((res)=>{
+        console.log(res.data);
+        setCommentId(res.data)
+      })
+      .catch((err)=>{
+        console.log(err.response)
+      })
+    }
+  },
+  [comments])
 
   useEffect(() => {
     (async () => {
@@ -134,20 +151,18 @@ export default function BoxPost({ post, user }) {
       if (postLikes.liked) {
         txt = 'You';
         if (postLikes.users.length === 2 && postLikes.count >= 2) {
-          txt += `, ${postLikes.users[0]} and other ${
-            postLikes.count - 2 > 1
+          txt += `, ${postLikes.users[0]} and other ${postLikes.count - 2 > 1
               ? `${postLikes.count - 2} people`
               : '1 person'
-          }`;
+            }`;
         } else if (postLikes.users.length === 1) {
           txt += ` and ${postLikes.users[0]}`;
         }
       } else if (postLikes.users.length === 1) {
         txt += postLikes.users[0];
       } else if (postLikes.users.length === 2 && postLikes.count > 2) {
-        txt += `${postLikes.users[0]}, ${postLikes.users[1]} and other ${
-          postLikes.count - 2 > 1 ? `${postLikes.count - 2} people` : '1 person'
-        }`;
+        txt += `${postLikes.users[0]}, ${postLikes.users[1]} and other ${postLikes.count - 2 > 1 ? `${postLikes.count - 2} people` : '1 person'
+          }`;
       } else {
         txt += `${postLikes.users[0]} and ${postLikes.users[1]}`;
       }
@@ -186,6 +201,7 @@ export default function BoxPost({ post, user }) {
   };
 
   return (
+    <ContainerBoxPost>
     <Post>
       <ImageProfile>
         <img src={post.pictureUrl} alt='profile' />
@@ -204,6 +220,10 @@ export default function BoxPost({ post, user }) {
             anchorId={`post-likes-info-${post.id}`}
             content={tooltipTxt()}
           />
+        </div>
+        <div>
+          <AiOutlineComment onClick={()=> setComments(!comments)}/>
+          <p>0 comments</p>
         </div>
       </ImageProfile>
       <PostContent>
@@ -248,9 +268,27 @@ export default function BoxPost({ post, user }) {
         </Url>
       </PostContent>
     </Post>
+    <BoxComments open={comments} postId={post.id} commentId={commentId}/>
+    </ContainerBoxPost>
   );
 }
 
+const ContainerBoxPost = styled.div`
+  width: 611px;
+  /* background-color: blanchedalmond; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  margin-top: 15px;
+  position: relative;
+
+  @media (max-width: 974px) {
+    width: 100%;
+    border-radius: 0;
+  }
+`
 const TooltipEdit = styled(Tooltip)`
   z-index: 2;
   font-family: 'Lato';
@@ -259,14 +297,13 @@ const TooltipEdit = styled(Tooltip)`
   font-size: 11px;
   line-height: 13px;
 `;
-
 const Post = styled.div`
   box-sizing: border-box;
   padding: 18px 18px;
   width: 611px;
-  left: 241px;
+  /* left: 241px;
   top: 470px;
-  margin-bottom: 16px;
+  margin-bottom: 16px; */
   background: #171717;
   border-radius: 16px;
   display: flex;
@@ -282,9 +319,8 @@ const Post = styled.div`
     padding: 15px;
   }
 `;
-
 const ImageProfile = styled.div`
-  width: 50px;
+  width: 60px;
   img {
     width: 50px;
     height: 50px;
