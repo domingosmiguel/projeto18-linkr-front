@@ -4,6 +4,7 @@ import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
+import { MdRepeat } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -230,6 +231,10 @@ export default function BoxPost({ headers, post, user }) {
           <AiOutlineComment onClick={()=> setComments(!comments)}/>
           <p>{qtdComments(post.id)}{qtdComment!==""? qtdComment:"0"} comments</p>
         </div>
+        <div>
+          <MdRepeat/>
+          <p>0 re-posts</p>
+        </div>
       </ImageProfile>
       <PostContent>
         <BoxNameIcons>
@@ -280,6 +285,7 @@ export default function BoxPost({ headers, post, user }) {
         postId={post.id}
         commentId={commentId}
         setCommentId={setCommentId}
+        user={user}
       />
     </ContainerBoxPost>
   );
@@ -310,12 +316,10 @@ const TooltipEdit = styled(Tooltip)`
   line-height: 13px;
 `;
 const Post = styled.div`
+  z-index: 1;
   box-sizing: border-box;
   padding: 18px 18px;
   width: 611px;
-  /* left: 241px;
-  top: 470px;
-  margin-bottom: 16px; */
   background: #171717;
   border-radius: 16px;
   display: flex;
@@ -332,7 +336,11 @@ const Post = styled.div`
   }
 `;
 const ImageProfile = styled.div`
-  width: 60px;
+  width: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 5px;
   img {
     width: 50px;
     height: 50px;
