@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useInterval from 'use-interval';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
 import ModalDelete from '../../Components/Modal';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
-import useInterval from 'use-interval';
 import {
   BoxInputs,
   ButtonPost,
@@ -17,11 +17,8 @@ import {
   ContainerTimeline,
   Image,
   InputLink,
-  InputText,
-  TittlePosts,
-  NewPosts,
+  InputText, NewPosts, TittlePosts
 } from './TimelineStyle';
-import styled from 'styled-components';
 
 export default function TimelinePage() {
   const {

@@ -199,6 +199,8 @@ export default function BoxPost({ post, user }) {
             {postLikes.count} Like{postLikes.count !== 1 && 's'}
           </p>
           <TooltipEdit
+            variant='light'
+            place='bottom'
             anchorId={`post-likes-info-${post.id}`}
             content={tooltipTxt()}
           />
@@ -250,7 +252,12 @@ export default function BoxPost({ post, user }) {
 }
 
 const TooltipEdit = styled(Tooltip)`
-  z-index: 999;
+  z-index: 2;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 13px;
 `;
 
 const Post = styled.div`
@@ -284,7 +291,7 @@ const ImageProfile = styled.div`
     border-radius: 50%;
     object-fit: cover;
   }
-  div {
+  & > div {
     height: 40px;
     margin-top: 20px;
     display: flex;
@@ -302,6 +309,7 @@ const ImageProfile = styled.div`
     }
   }
   p {
+    cursor: default;
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
