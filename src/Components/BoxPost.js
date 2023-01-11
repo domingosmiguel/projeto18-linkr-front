@@ -20,6 +20,7 @@ export default function BoxPost({ post, user }) {
   const [disabledEdition, setDisabledEdition] = useState(false);
   const [comments, setComments] = useState(false);
   const [commentId, setCommentId] = useState("");
+  const [qtdComment, setQtdComment] = useState("");
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -35,6 +36,17 @@ export default function BoxPost({ post, user }) {
     users: [],
     liked: false,
   });
+
+  function qtdComments(id){
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comments-all/${id}`, config)
+    .then((res)=>{
+      setQtdComment(res.data);
+    })
+    .catch((err)=>{
+      console.log(err.response)
+    })
+  }
+
   function makeEdition(id) {
     setEditing(!editing);
     setIdEdition(id);
@@ -54,7 +66,6 @@ export default function BoxPost({ post, user }) {
     if (comments) {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${post.id}`, config)
       .then((res)=>{
-        console.log(res.data);
         setCommentId(res.data)
       })
       .catch((err)=>{
@@ -223,7 +234,7 @@ export default function BoxPost({ post, user }) {
         </div>
         <div>
           <AiOutlineComment onClick={()=> setComments(!comments)}/>
-          <p>{commentId.length} comments</p>
+          <p>{qtdComments(post.id)} {qtdComment!==""? qtdComment:"0"} comments</p>
         </div>
       </ImageProfile>
       <PostContent>

@@ -36,7 +36,7 @@ export default function TimelinePage() {
     hashtags,
     setHashtags,
   } = useContext(DadosContext);
-  console.log('🚀 ~ file: TimelinePage.js:36 ~ TimelinePage ~ posts', posts);
+  // console.log('🚀 ~ file: TimelinePage.js:36 ~ TimelinePage ~ posts', posts);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [following, setFollowing] = useState([]);
