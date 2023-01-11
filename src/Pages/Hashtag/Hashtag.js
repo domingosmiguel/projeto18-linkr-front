@@ -4,13 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
-import Trending from '../../Components/Trending';
 import Loading from '../../Components/Loading';
+import SearchInput from '../../Components/SearchInput';
+import Trending from '../../Components/Trending';
 
 const ContainerTimeline = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #4d4d4d;
+  background-color: #333333;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,6 +94,7 @@ export default function Hashtag() {
     <ContainerTimeline>
       <Header user={user} sessionId={sessionId} />
       <ContainerPostsAndTrending>
+        <SearchInput headers={config.headers} />
         <ContainerPosts>
           <TittlePosts>#{hashtag}</TittlePosts>
           {posts === '' ? (

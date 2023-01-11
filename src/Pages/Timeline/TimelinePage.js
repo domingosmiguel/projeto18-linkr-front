@@ -6,6 +6,7 @@ import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
 import ModalDelete from '../../Components/Modal';
+import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
 import {
@@ -17,7 +18,9 @@ import {
   ContainerTimeline,
   Image,
   InputLink,
-  InputText, NewPosts, TittlePosts
+  InputText,
+  NewPosts,
+  TittlePosts,
 } from './TimelineStyle';
 
 export default function TimelinePage() {
@@ -147,6 +150,7 @@ export default function TimelinePage() {
     <ContainerTimeline>
       <Header user={user} sessionId={sessionId} />
       <ContainerPostsAndTrending>
+        <SearchInput headers={config.headers} />
         <ContainerPosts>
           <TittlePosts>timeline</TittlePosts>
           <form onSubmit={publishPost}>
@@ -180,7 +184,7 @@ export default function TimelinePage() {
           <ModalDelete />
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new posts, load more!{' '}
-            <ion-icon name="refresh"></ion-icon>
+            <ion-icon name='refresh'></ion-icon>
           </NewPosts>
           {posts === '' ? (
             <Loading />
