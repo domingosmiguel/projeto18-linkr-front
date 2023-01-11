@@ -20,7 +20,8 @@ export default function BoxPost({ headers, post, user }) {
   const [disabledEdition, setDisabledEdition] = useState(false);
   const navigate = useNavigate();
   const [comments, setComments] = useState(false);
-  const [commentId, setCommentId] = useState('');
+  const [commentId, setCommentId] = useState("");
+  const [qtdComment, setQtdComment] = useState("");
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -29,6 +30,17 @@ export default function BoxPost({ headers, post, user }) {
     users: [],
     liked: false,
   });
+
+  function qtdComments(id){
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comments-all/${id}`, { headers } )
+    .then((res)=>{
+      setQtdComment(res.data);
+    })
+    .catch((err)=>{
+      console.log(err.response)
+    })
+  }
+
   function makeEdition(id) {
     setEditing(!editing);
     setIdEdition(id);
@@ -47,8 +59,7 @@ export default function BoxPost({ headers, post, user }) {
           headers,
         })
         .then((res) => {
-          console.log(res.data);
-          setCommentId(res.data);
+            setCommentId(res.data);
         })
         .catch((err) => {
           console.log(err.response);
@@ -196,62 +207,60 @@ export default function BoxPost({ headers, post, user }) {
 
   return (
     <ContainerBoxPost>
-      <Post>
-        <ImageProfile>
-          <img src={post.pictureUrl} alt='profile' />
-          <div>
-            {postLikes.liked ? (
-              <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
-            ) : (
-              <AiOutlineHeart onClick={like} />
-            )}
-            <p id={`post-likes-info-${post.id}`}>
-              {postLikes.count} Like{postLikes.count !== 1 && 's'}
-            </p>
-            <TooltipEdit
-              variant='light'
-              place='bottom'
-              anchorId={`post-likes-info-${post.id}`}
-              content={tooltipTxt()}
+    <Post>
+      <ImageProfile>
+        <img src={post.pictureUrl} alt='profile' />
+        <div>
+          {postLikes.liked ? (
+            <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
+          ) : (
+            <AiOutlineHeart onClick={like} />
+          )}
+          <p id={`post-likes-info-${post.id}`}>
+            {postLikes.count} Like{postLikes.count !== 1 && 's'}
+          </p>
+          <TooltipEdit
+            variant='light'
+            place='bottom'
+            anchorId={`post-likes-info-${post.id}`}
+            content={tooltipTxt()}
+          />
+        </div>
+        <div>
+          <AiOutlineComment onClick={()=> setComments(!comments)}/>
+          <p>{qtdComments(post.id)}{qtdComment!==""? qtdComment:"0"} comments</p>
+        </div>
+      </ImageProfile>
+      <PostContent>
+        <BoxNameIcons>
+          <Link to={`/user/${post.userId}`}>
+            <span>{post.username}</span>
+          </Link>
+          {user.id === post.userId && (
+            <BoxIcons>
+              <HiPencilAlt onClick={() => makeEdition(post.id)} />
+              <HiTrash onClick={() => openModal(post.id)} />
+            </BoxIcons>
+          )}
+        </BoxNameIcons>
+        {idEdition === post.id ? 
+          editing === true ? (
+            <InputEdition
+              ref={inputRef}
+              disabled={disabledEdition}
+              onChange={(e) => setTextEdited(e.target.value)}
+              value={textEdited}
+              type='text'
+              onKeyUp={(event) => editionPostText(event, post.id)}
             />
-          </div>
-          <div>
-            <AiOutlineComment onClick={() => setComments(!comments)} />
-            <p>0 comments</p>
-          </div>
-        </ImageProfile>
-        <PostContent>
-          <BoxNameIcons>
-            <Link to={`/user/${post.userId}`}>
-              <span>{post.username}</span>
-            </Link>
-            {user.id === post.userId && (
-              <BoxIcons>
-                <HiPencilAlt onClick={() => makeEdition(post.id)} />
-                <HiTrash onClick={() => openModal(post.id)} />
-              </BoxIcons>
-            )}
-          </BoxNameIcons>
-          {idEdition === post.id ? (
-            editing === true ? (
-              <InputEdition
-                ref={inputRef}
-                disabled={disabledEdition}
-                onChange={(e) => setTextEdited(e.target.value)}
-                value={textEdited}
-                type='text'
-                onKeyUp={(event) => editionPostText(event, post.id)}
-              />
-            ) : (
-              <Text>
-                <Linkify options={options}>{post.txt}</Linkify>
-              </Text>
-            )
           ) : (
             <Text>
               <Linkify options={options}>{post.txt}</Linkify>
             </Text>
-          )}
+          ):(
+          <Text>
+              <Linkify options={options}>{post.txt}</Linkify>
+            </Text> )}
           <Url onClick={() => window.open(post.link)}>
             <Data>
               <h1>{post.title}</h1>
