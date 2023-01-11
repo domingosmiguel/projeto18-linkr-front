@@ -17,7 +17,7 @@ export default function SearchInput({ headers }) {
     }
   }
   return (
-    <SearchResults>
+    <Positioner>
       <InputContainer>
         <DebounceInput
           element={MyInput}
@@ -38,14 +38,50 @@ export default function SearchInput({ headers }) {
         />
         <AiOutlineSearch />
       </InputContainer>
-      {users.map((user) => (
-        <UserCard key={user.id} following={user.following} user={user} />
-      ))}
-    </SearchResults>
+      <ScrollContainer length={users.length}>
+        <ResultsContainer>
+          {users.slice(0, 10).map((user) => (
+            <UserCard key={user.id} following={user.following} user={user} />
+          ))}
+        </ResultsContainer>
+      </ScrollContainer>
+    </Positioner>
   );
 }
+const ScrollContainer = styled.div`
+  position: relative;
 
-const SearchResults = styled.div`
+  height: ${({ length }) => {
+    let height = 0;
+    if (length) {
+      height += 14 + length * 53;
+    }
+    return height + 'px';
+  }};
+  max-height: 332px;
+
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: block;
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 20px;
+    border: 3px solid #e7e7e7;
+  }
+`;
+const ResultsContainer = styled.div`
+  position: absolute;
+  width: 100%;
+`;
+const Positioner = styled.div`
   background-color: #e7e7e7;
   border-radius: 8px;
   position: fixed;
