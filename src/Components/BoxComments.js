@@ -4,7 +4,7 @@ import { FiSend } from "react-icons/fi"
 import { useState } from "react";
 import { ThreeDots } from  'react-loader-spinner'
 
-export default function BoxComments({ open, postId, commentId }) {
+export default function BoxComments({ open, postId, commentId, setCommentId }) {
     const [comment, setComment] = useState("");
     const [disabled, setDisabled] = useState(false);
     const config = {
@@ -20,14 +20,27 @@ export default function BoxComments({ open, postId, commentId }) {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${postId}`, body, config)
             .then((res) => {
                 console.log(res.data)
-                setDisabled(false)
-                setComment("")
+                atualizarComments()
             })
             .catch((err) => {
                 console.log(err.response)
                 setDisabled(false)
                 setComment("")
             })
+    }
+
+    function atualizarComments(){
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${postId}`, config)
+        .then((res)=>{
+            setCommentId(res.data)
+            setDisabled(false)
+            setComment("")
+        })
+        .catch((err)=>{
+            console.log(err.response)
+            setDisabled(false)
+            setComment("")
+        })
     }
 
     return (

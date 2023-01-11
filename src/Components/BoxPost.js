@@ -268,7 +268,11 @@ export default function BoxPost({ post, user }) {
         </Url>
       </PostContent>
     </Post>
-    <BoxComments open={comments} postId={post.id} commentId={commentId}/>
+    <BoxComments 
+      open={comments} 
+      postId={post.id} 
+      commentId={commentId}
+      setCommentId={setCommentId}/>
     </ContainerBoxPost>
   );
 }
