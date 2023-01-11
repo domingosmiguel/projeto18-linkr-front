@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 import LoadingDelete from './LoadingDelete';
 
-export default function ModalDelete() {
+export default function ModalDelete({ config }) {
   const {
     modalIsOpen,
     setIsOpen,
@@ -42,12 +42,6 @@ export default function ModalDelete() {
 
   function deletePost(id) {
     setDisabledModal(true);
-
-    const config = {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
 
     axios
       .delete(`${process.env.REACT_APP_BACKEND_URL}/user-posts/${id}`, config)

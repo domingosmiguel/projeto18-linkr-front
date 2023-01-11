@@ -129,13 +129,13 @@ const Form = styled.div`
   }
 `;
 
-function Login() {
+function Login({ logged, updateToken }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isAwating, setAwaiting] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
-    if (localStorage.token) {
+    if (logged) {
       navigate('/timeline');
     }
   });
@@ -147,7 +147,7 @@ function Login() {
         { email, password }
       );
       promise.then((response) => {
-        localStorage.setItem('token', response.data);
+        updateToken(response.data);
         navigate('/timeline');
       });
       promise.catch((error) => {
