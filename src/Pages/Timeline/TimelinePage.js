@@ -257,10 +257,16 @@ export default function TimelinePage({ config, deleteToken }) {
               />
             ))
           )}
-          {posts && posts.length && hasMore ? (
-            <LoadingMorePosts ref={loaderRef} />
+          {posts.length ? (
+            hasMore ? (
+              <LoadingMorePosts ref={loaderRef} />
+            ) : (
+              <MessageText>
+                No more posts from your friends available
+              </MessageText>
+            )
           ) : (
-            <MessageText>No more posts from your friends available</MessageText>
+            <></>
           )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />
