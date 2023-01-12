@@ -11,6 +11,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 import BoxComments from './BoxComments';
+import ModalDelete from './ModalDelete';
 
 export default function BoxPost({ headers, post, user }) {
   const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
@@ -295,6 +296,7 @@ export default function BoxPost({ headers, post, user }) {
         setCommentId={setCommentId}
         user={user}
       />
+      <ModalDelete headers={headers} />
     </ContainerBoxPost>
   );
 }
