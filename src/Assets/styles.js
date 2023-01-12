@@ -28,7 +28,6 @@ export const ContainerPostsAndTrending = styled.div`
 `;
 export const ContainerPosts = styled.div`
   width: 611px;
-  height: 1000px;
   position: absolute;
   left: 0;
   top: 0;
@@ -130,15 +129,16 @@ export const InputText = styled.input`
 
 export const MessageText = styled.p`
   width: fit-content;
-  margin: 20px auto 20px;
+  margin: 20px auto 0;
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 20px;
   color: #fff;
+  padding-bottom: 60px;
 
   @media (max-width: 974px) {
-    font-size: 14px;
+    font-size: 16px;
   }
 `;
 
