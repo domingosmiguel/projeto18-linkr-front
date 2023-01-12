@@ -6,11 +6,9 @@ export default function UserCard({
   user: { id, username, pictureUrl },
 }) {
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/user/${id}`);
-  };
+
   return (
-    <Card onClick={handleClick}>
+    <Card onClick={() => navigate(`/user/${id}`)}>
       <ProfilePic src={pictureUrl} alt={username} />
       <p>{username}</p>
       {following && <Follows>• following</Follows>}

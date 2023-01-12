@@ -2,6 +2,16 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useInterval from 'use-interval';
+import {
+  ContainerInputs,
+  ContainerPosts,
+  ContainerPostsAndTrending,
+  ContainerTimeline,
+  InputLink,
+  InputText,
+  MessageText,
+  TittlePosts,
+} from '../../Assets/styles';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
@@ -9,19 +19,7 @@ import ModalDelete from '../../Components/ModalDelete';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
-import {
-  BoxInputs,
-  ButtonPost,
-  ContainerInputs,
-  ContainerPosts,
-  ContainerPostsAndTrending,
-  ContainerTimeline,
-  Image,
-  InputLink,
-  InputText,
-  NewPosts,
-  TittlePosts,
-} from './TimelineStyle';
+import { BoxInputs, ButtonPost, Image, NewPosts } from './TimelineStyle';
 
 export default function TimelinePage({ config, deleteToken }) {
   const {
@@ -187,12 +185,12 @@ export default function TimelinePage({ config, deleteToken }) {
           </NewPosts>
           {posts === '' ? (
             <Loading />
-          ) : posts.length === 0 ? (
-            following.length === 0 ? (
-              "You don't follow anyone yet. Search for new friends!"
-            ) : (
-              'No posts found from your friends'
-            )
+          ) : posts.length === 0 && !newPostsNumber ? (
+            <MessageText>
+              {following.length === 0
+                ? "You don't follow anyone yet. Search for new friends!"
+                : 'No posts found from your friends'}
+            </MessageText>
           ) : (
             posts.map((p, idx) => (
               <BoxPost

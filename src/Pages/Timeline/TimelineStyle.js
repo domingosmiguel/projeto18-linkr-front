@@ -1,195 +1,48 @@
 import styled from 'styled-components';
 
-export const ContainerTimeline = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background-color: #333333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto;
-  ::-webkit-scrollbar {
-    width: 0px;
-  }
-`;
-export const ContainerPostsAndTrending = styled.div`
-  width: 940px;
-  min-height: 100%;
-  margin-top: 140px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  /* background-color: pink; */
-  @media (max-width: 974px) {
-    width: 100%;
-  }
-`;
-export const ContainerPosts = styled.div`
-  width: 611px;
-  height: 1000px;
-  position: relative;
-  position: absolute;
-  left: 0;
-  top: 0;
-  @media (max-width: 974px) {
-    width: 100%;
-    margin: 0 auto;
-  }
-`;
-export const TittlePosts = styled.div`
-  width: 145px;
-  height: 64px;
-  margin-top: 53px;
-  font-family: 'Oswald', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 43px;
-  line-height: 64px;
-  color: #ffffff;
-
-  @media (max-width: 974px) {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 10px;
-  }
-`;
 export const BoxInputs = styled.div`
-  box-sizing: border-box;
-  padding-top: 20px;
+  padding: 16px 22px 16px 18px;
   width: 611px;
-  height: 209px;
   margin-top: 43px;
   margin-bottom: 29px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   background-color: #ffffff;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
 
   @media (max-width: 974px) {
+    padding: 10px 16px 12px 16px;
+    margin-bottom: 16px;
     width: 100%;
     border-radius: 0;
+    margin-top: 10px;
   }
 `;
 export const Image = styled.div`
-  width: 20px;
-  height: 200px;
+  width: 50px;
+  margin-right: 18px;
+
+  @media (max-width: 974px) {
+    display: none;
+  }
   img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    @media (max-width: 974px) {
-      display: none;
-    }
   }
 `;
-export const ContainerInputs = styled.div`
-  width: 502px;
-  height: 209px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  span {
-    display: block;
-    margin-bottom: 10px;
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 300;
-    font-size: 20px;
-    line-height: 24px;
-    color: #707070;
-    @media (max-width: 974px) {
-      width: 100%;
-    }
-  }
 
-  @media (max-width: 974px) {
-    width: 100%;
-  }
-`;
-export const InputLink = styled.input`
-  width: 503px;
-  height: 30px;
-  left: 327px;
-  top: 288px;
-  background: #efefef;
-  border-radius: 5px;
-  border: none;
-  margin-bottom: 5px;
-
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 300;
-  font-size: 15px;
-  line-height: 18px;
-  color: #949494;
-  &::placeholder {
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 18px;
-    color: #949494;
-  }
-  &:disabled {
-    background-color: #b5b5b5;
-    color: #000000;
-  }
-
-  @media (max-width: 974px) {
-    width: 95%;
-  }
-`;
-export const InputText = styled.input`
-  width: 502px;
-  height: 66px;
-  background: #efefef;
-  border-radius: 5px;
-  border: none;
-
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 300;
-  font-size: 15px;
-  line-height: 18px;
-  color: #949494;
-
-  position: relative;
-  &::placeholder {
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 18px;
-    color: #949494;
-    position: absolute;
-    left: 10px;
-    top: 10px;
-  }
-  &:disabled {
-    background-color: #b5b5b5;
-    color: #000000;
-  }
-
-  @media (max-width: 974px) {
-    width: 95%;
-  }
-`;
 export const ButtonPost = styled.button`
   width: 112px;
   height: 31px;
-  left: 718px;
-  top: 394px;
   background: #1877f2;
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  margin-top: 5px;
-  margin-left: 79%;
+  margin: 5px 0 0 auto;
 
   font-family: 'Lato';
   font-style: normal;
@@ -212,9 +65,9 @@ export const ButtonPost = styled.button`
   }
 
   @media (max-width: 974px) {
-    width: 30%;
-    margin-left: 65%;
+    margin: 6px 0 0 auto;
     font-size: 12px;
+    height: 22px;
   }
 `;
 
@@ -231,10 +84,18 @@ export const NewPosts = styled.div`
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
-  color: white;
-  gap: 10px;
-  margin-bottom: 18px;
+  color: #fff;
+  gap: 16px;
+
+  margin: 0 0 18px;
+
   :hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 974px) {
+    width: calc(100% - 20px);
+    margin: 0 10px 18px;
+    height: 51px;
   }
 `;
