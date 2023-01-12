@@ -214,7 +214,7 @@ export default function BoxPost({ headers, post, user }) {
     <ContainerBoxPost>
       <Post>
         <ImageProfile>
-          <img src={post.pictureUrl} alt='profile' />
+          <img src={post.pictureUrl} alt="profile" />
           <div>
             {postLikes.liked ? (
               <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
@@ -225,8 +225,8 @@ export default function BoxPost({ headers, post, user }) {
               {postLikes.count} Like{postLikes.count !== 1 && 's'}
             </p>
             <TooltipEdit
-              variant='light'
-              place='bottom'
+              variant="light"
+              place="bottom"
               anchorId={`post-likes-info-${post.id}`}
               content={tooltipTxt()}
             />
@@ -262,7 +262,7 @@ export default function BoxPost({ headers, post, user }) {
                 disabled={disabledEdition}
                 onChange={(e) => setTextEdited(e.target.value)}
                 value={textEdited}
-                type='text'
+                type="text"
                 onKeyUp={(event) => editionPostText(event, post.id)}
               />
             ) : (
@@ -282,7 +282,7 @@ export default function BoxPost({ headers, post, user }) {
               <h3>{post.link}</h3>
             </Data>
             {regex.test(post.image) ? (
-              <img src={post.image} alt='link' />
+              <img src={post.image} alt="link" />
             ) : (
               <></>
             )}
@@ -295,6 +295,7 @@ export default function BoxPost({ headers, post, user }) {
         commentId={commentId}
         setCommentId={setCommentId}
         user={user}
+        key={commentId}
       />
       <ModalDelete headers={headers} />
     </ContainerBoxPost>
@@ -402,6 +403,8 @@ const Text = styled.div`
   font-size: 17px;
   line-height: 20px;
   color: #b7b7b7;
+  word-wrap: break-word;
+  word-break: break-all;
   a {
     text-decoration: none;
     color: white;
@@ -430,6 +433,8 @@ const Data = styled.div`
   font-weight: 400;
   box-sizing: border-box;
   padding: 24px 20px 24px 28px;
+  word-wrap: break-word;
+  word-break: break-all;
   h1 {
     font-size: 16px;
     color: #cecece;

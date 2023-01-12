@@ -134,8 +134,8 @@ export const MessageText = styled.p`
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  color: #fff;
+  font-size: 22px;
+  color: white;
 `;
 
 export const TittlePosts = styled.div`
