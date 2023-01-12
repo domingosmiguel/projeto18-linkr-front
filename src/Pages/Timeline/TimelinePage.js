@@ -72,7 +72,7 @@ export default function TimelinePage({ config, deleteToken }) {
         `${process.env.REACT_APP_BACKEND_URL}/new-posts/${
           posts.length
             ? posts[0].createdAt
-            : new Date('1995-12-17T03:24:00').toISOString()
+            : new Date('1970-01-01 00:00:00').toISOString()
         }`,
         config
       )
@@ -235,7 +235,7 @@ export default function TimelinePage({ config, deleteToken }) {
             </BoxInputs>
           </form>
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
-            {newPostsNumber} new posts, load more!{' '}
+            {newPostsNumber} new post{newPostsNumber > 1 && 's'}, load more!{' '}
             <ion-icon name='refresh'></ion-icon>
           </NewPosts>
           {!posts ? (
@@ -247,12 +247,12 @@ export default function TimelinePage({ config, deleteToken }) {
                 : 'No posts found from your friends'}
             </MessageText>
           ) : (
-            posts.map((p, idx) => (
+            posts.map((p) => (
               <BoxPost
                 headers={config.headers}
                 user={user}
                 post={p}
-                key={idx}
+                key={p.id}
               />
             ))
           )}

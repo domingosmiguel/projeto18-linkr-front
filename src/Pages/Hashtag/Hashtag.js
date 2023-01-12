@@ -81,7 +81,7 @@ export default function Hashtag({ config, deleteToken }) {
         `${process.env.REACT_APP_BACKEND_URL}/new-hashtag-posts/${hashtag}/${
           posts.length
             ? posts[0].createdAt
-            : new Date('1995-12-17T03:24:00').toISOString()
+            : new Date('1970-01-01 00:00:00').toISOString()
         }`,
         config
       )
@@ -89,6 +89,7 @@ export default function Hashtag({ config, deleteToken }) {
         if (response.data.number) setNewPostsNumber(response.data.number);
       })
       .catch((error) => {
+        console.log(error);
         alert(
           'An error occurred while trying to get the number of new posts, please try refreshing the page'
         );
@@ -199,7 +200,7 @@ export default function Hashtag({ config, deleteToken }) {
         <ContainerPosts>
           <TittlePosts>#{hashtag}</TittlePosts>
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
-            {newPostsNumber} new posts, load more!{' '}
+            {newPostsNumber} new post{newPostsNumber > 1 && 's'}, load more!{' '}
             <ion-icon name='refresh'></ion-icon>
           </NewPosts>
           {!posts ? (
@@ -207,12 +208,12 @@ export default function Hashtag({ config, deleteToken }) {
           ) : !posts.length && !newPostsNumber ? (
             <MessageText>No posts are available for this hashtag</MessageText>
           ) : (
-            posts.map((p, idx) => (
+            posts.map((p) => (
               <BoxPost
                 headers={config.headers}
                 user={user}
                 post={p}
-                key={idx}
+                key={p.id}
               />
             ))
           )}
