@@ -4,6 +4,7 @@ import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
+import { MdRepeat } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -21,6 +22,7 @@ export default function BoxPost({ headers, post, user }) {
   const navigate = useNavigate();
   const [comments, setComments] = useState(false);
   const [commentId, setCommentId] = useState('');
+  const [qtdComment, setQtdComment] = useState('');
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -29,6 +31,20 @@ export default function BoxPost({ headers, post, user }) {
     users: [],
     liked: false,
   });
+
+  function qtdComments(id) {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/post-comments-all/${id}`, {
+        headers,
+      })
+      .then((res) => {
+        setQtdComment(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
+
   function makeEdition(id) {
     setEditing(!editing);
     setIdEdition(id);
@@ -47,7 +63,6 @@ export default function BoxPost({ headers, post, user }) {
           headers,
         })
         .then((res) => {
-          console.log(res.data);
           setCommentId(res.data);
         })
         .catch((err) => {
@@ -217,7 +232,14 @@ export default function BoxPost({ headers, post, user }) {
           </div>
           <div>
             <AiOutlineComment onClick={() => setComments(!comments)} />
-            <p>0 comments</p>
+            <p>
+              {qtdComments(post.id)}
+              {qtdComment !== '' ? qtdComment : '0'} comments
+            </p>
+          </div>
+          <div>
+            <MdRepeat />
+            <p>0 re-posts</p>
           </div>
         </ImageProfile>
         <PostContent>
@@ -271,6 +293,7 @@ export default function BoxPost({ headers, post, user }) {
         postId={post.id}
         commentId={commentId}
         setCommentId={setCommentId}
+        user={user}
       />
     </ContainerBoxPost>
   );
@@ -300,6 +323,7 @@ const TooltipEdit = styled(Tooltip)`
   line-height: 13px;
 `;
 const Post = styled.div`
+  z-index: 1;
   box-sizing: border-box;
   padding: 17px 21px 20px 10px;
   width: 100%;
