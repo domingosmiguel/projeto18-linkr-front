@@ -1,12 +1,16 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import useInterval from 'use-interval';
+import { MessageText } from '../../Assets/styles';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
+import { LoadingMorePosts } from '../../Components/LoadingMorePosts';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
+import { EndMessage, NewPosts } from '../Timeline/TimelineStyle';
 
 const ContainerTimeline = styled.div`
   width: 100vw;
@@ -66,7 +70,74 @@ export default function Hashtag({ config, deleteToken }) {
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [hashtags, setHashtags] = useState([]);
+  const [newPostsNumber, setNewPostsNumber] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const loaderRef = useRef(null);
   const navigate = useNavigate();
+
+  useInterval(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/new-posts/${
+          posts.length ? posts[0].id : 0
+        }`,
+        config
+      )
+      .then((response) => {
+        if (response.data) setNewPostsNumber(response.data);
+      })
+      .catch((error) => {
+        alert(
+          'An error occurred while trying to get the number of new posts, please try refreshing the page'
+        );
+      });
+  }, 15000);
+
+  function getMorePosts(posts) {
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}/${
+          posts[posts.length - 1].id
+        }`,
+        config
+      )
+      .then((res) => {
+        setPosts(...posts, ...res.data.posts);
+        setHasMore(res.data.hasMore);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          deleteToken();
+          navigate('/');
+        }
+        if (err.response?.status === 500) {
+          alert(
+            'An error occurred while trying to fetch the posts, please refresh the page'
+          );
+        }
+      });
+  }
+
+  const observer = (posts) => {
+    const options = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entities) => {
+      const target = entities[0];
+
+      if (target.isIntersecting) {
+        getMorePosts(posts);
+      }
+    }, options);
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+  };
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}`, config)
@@ -75,6 +146,8 @@ export default function Hashtag({ config, deleteToken }) {
         setSessionId(res.data.sessionId);
         setPosts(res.data.posts);
         setHashtags(res.data.hashtags);
+        setHasMore(res.data.hasMore);
+        observer(res.data.posts);
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -84,6 +157,28 @@ export default function Hashtag({ config, deleteToken }) {
         }
       });
   }, []);
+
+  function updateTimeline() {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}`, config)
+      .then((res) => {
+        setPosts(res.data.posts);
+        setHashtags(res.data.hashtags);
+        setNewPostsNumber(0);
+      })
+      .catch((err) => {
+        console.log(err.response.status);
+        if (err.response.status === 401) {
+          deleteToken();
+          navigate('/');
+        }
+        if (err.response.status === 500) {
+          alert(
+            'An error occured while trying to fetch the posts, please refresh the page'
+          );
+        }
+      });
+  }
 
   return (
     <ContainerTimeline>
@@ -97,10 +192,14 @@ export default function Hashtag({ config, deleteToken }) {
         <SearchInput headers={config.headers} />
         <ContainerPosts>
           <TittlePosts>#{hashtag}</TittlePosts>
-          {posts === '' ? (
+          <NewPosts number={newPostsNumber} onClick={updateTimeline}>
+            {newPostsNumber} new posts, load more!{' '}
+            <ion-icon name="refresh"></ion-icon>
+          </NewPosts>
+          {!posts ? (
             <Loading />
-          ) : posts.length === 0 ? (
-            'There are no posts yet'
+          ) : !posts.length && !newPostsNumber ? (
+            <MessageText>No posts are available for this hashtag</MessageText>
           ) : (
             posts.map((p, idx) => (
               <BoxPost
@@ -110,6 +209,21 @@ export default function Hashtag({ config, deleteToken }) {
                 key={idx}
               />
             ))
+          )}
+          {posts ? (
+            posts.length ? (
+              hasMore ? (
+                <LoadingMorePosts ref={loaderRef} />
+              ) : (
+                <EndMessage>
+                  No more posts from your friends are available
+                </EndMessage>
+              )
+            ) : (
+              <></>
+            )
+          ) : (
+            <></>
           )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />

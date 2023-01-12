@@ -237,9 +237,9 @@ export default function TimelinePage({ config, deleteToken }) {
             {newPostsNumber} new posts, load more!{' '}
             <ion-icon name="refresh"></ion-icon>
           </NewPosts>
-          {posts === '' ? (
+          {!posts ? (
             <Loading />
-          ) : posts.length === 0 && !newPostsNumber ? (
+          ) : !posts.length && !newPostsNumber ? (
             <MessageText>
               {following.length === 0
                 ? "You don't follow anyone yet. Search for new friends!"
