@@ -1,19 +1,20 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  ContainerPosts,
+  ContainerPostsAndTrending,
+  ContainerTimeline,
+  MessageText,
+  TittlePosts,
+} from '../../Assets/styles';
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import FollowButton from './FollowButton';
-import {
-  ContainerImgNameUser,
-  ContainerPosts,
-  ContainerPostsAndTrending,
-  ContainerTimeline,
-  TittlePosts,
-} from './UserTimelineStyle';
+import { ContainerImgNameUser } from './UserTimelineStyle';
 
 export default function UserTimeline({ config, deleteToken }) {
   const { id } = useParams();
@@ -75,7 +76,7 @@ export default function UserTimeline({ config, deleteToken }) {
           {timelinePosts === '' ? (
             <Loading />
           ) : timelinePosts.length === 0 ? (
-            'There are no posts yet'
+            <MessageText>There are no posts yet</MessageText>
           ) : (
             timelinePosts.map((post) => (
               <BoxPost

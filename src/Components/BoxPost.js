@@ -4,7 +4,7 @@ import Linkify from 'linkify-react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
-import { MdRepeat } from "react-icons/md";
+import { MdRepeat } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -21,8 +21,8 @@ export default function BoxPost({ headers, post, user }) {
   const [disabledEdition, setDisabledEdition] = useState(false);
   const navigate = useNavigate();
   const [comments, setComments] = useState(false);
-  const [commentId, setCommentId] = useState("");
-  const [qtdComment, setQtdComment] = useState("");
+  const [commentId, setCommentId] = useState('');
+  const [qtdComment, setQtdComment] = useState('');
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -32,14 +32,17 @@ export default function BoxPost({ headers, post, user }) {
     liked: false,
   });
 
-  function qtdComments(id){
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comments-all/${id}`, { headers } )
-    .then((res)=>{
-      setQtdComment(res.data);
-    })
-    .catch((err)=>{
-      console.log(err.response)
-    })
+  function qtdComments(id) {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/post-comments-all/${id}`, {
+        headers,
+      })
+      .then((res) => {
+        setQtdComment(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
   }
 
   function makeEdition(id) {
@@ -60,7 +63,7 @@ export default function BoxPost({ headers, post, user }) {
           headers,
         })
         .then((res) => {
-            setCommentId(res.data);
+          setCommentId(res.data);
         })
         .catch((err) => {
           console.log(err.response);
@@ -208,64 +211,69 @@ export default function BoxPost({ headers, post, user }) {
 
   return (
     <ContainerBoxPost>
-    <Post>
-      <ImageProfile>
-        <img src={post.pictureUrl} alt='profile' />
-        <div>
-          {postLikes.liked ? (
-            <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
-          ) : (
-            <AiOutlineHeart onClick={like} />
-          )}
-          <p id={`post-likes-info-${post.id}`}>
-            {postLikes.count} Like{postLikes.count !== 1 && 's'}
-          </p>
-          <TooltipEdit
-            variant='light'
-            place='bottom'
-            anchorId={`post-likes-info-${post.id}`}
-            content={tooltipTxt()}
-          />
-        </div>
-        <div>
-          <AiOutlineComment onClick={()=> setComments(!comments)}/>
-          <p>{qtdComments(post.id)}{qtdComment!==""? qtdComment:"0"} comments</p>
-        </div>
-        <div>
-          <MdRepeat/>
-          <p>0 re-posts</p>
-        </div>
-      </ImageProfile>
-      <PostContent>
-        <BoxNameIcons>
-          <Link to={`/user/${post.userId}`}>
-            <span>{post.username}</span>
-          </Link>
-          {user.id === post.userId && (
-            <BoxIcons>
-              <HiPencilAlt onClick={() => makeEdition(post.id)} />
-              <HiTrash onClick={() => openModal(post.id)} />
-            </BoxIcons>
-          )}
-        </BoxNameIcons>
-        {idEdition === post.id ? 
-          editing === true ? (
-            <InputEdition
-              ref={inputRef}
-              disabled={disabledEdition}
-              onChange={(e) => setTextEdited(e.target.value)}
-              value={textEdited}
-              type='text'
-              onKeyUp={(event) => editionPostText(event, post.id)}
+      <Post>
+        <ImageProfile>
+          <img src={post.pictureUrl} alt='profile' />
+          <div>
+            {postLikes.liked ? (
+              <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
+            ) : (
+              <AiOutlineHeart onClick={like} />
+            )}
+            <p id={`post-likes-info-${post.id}`}>
+              {postLikes.count} Like{postLikes.count !== 1 && 's'}
+            </p>
+            <TooltipEdit
+              variant='light'
+              place='bottom'
+              anchorId={`post-likes-info-${post.id}`}
+              content={tooltipTxt()}
             />
+          </div>
+          <div>
+            <AiOutlineComment onClick={() => setComments(!comments)} />
+            <p>
+              {qtdComments(post.id)}
+              {qtdComment !== '' ? qtdComment : '0'} comments
+            </p>
+          </div>
+          <div>
+            <MdRepeat />
+            <p>0 re-posts</p>
+          </div>
+        </ImageProfile>
+        <PostContent>
+          <BoxNameIcons>
+            <Link to={`/user/${post.userId}`}>
+              <span>{post.username}</span>
+            </Link>
+            {user.id === post.userId && (
+              <BoxIcons>
+                <HiPencilAlt onClick={() => makeEdition(post.id)} />
+                <HiTrash onClick={() => openModal(post.id)} />
+              </BoxIcons>
+            )}
+          </BoxNameIcons>
+          {idEdition === post.id ? (
+            editing === true ? (
+              <InputEdition
+                ref={inputRef}
+                disabled={disabledEdition}
+                onChange={(e) => setTextEdited(e.target.value)}
+                value={textEdited}
+                type='text'
+                onKeyUp={(event) => editionPostText(event, post.id)}
+              />
+            ) : (
+              <Text>
+                <Linkify options={options}>{post.txt}</Linkify>
+              </Text>
+            )
           ) : (
             <Text>
               <Linkify options={options}>{post.txt}</Linkify>
             </Text>
-          ):(
-          <Text>
-              <Linkify options={options}>{post.txt}</Linkify>
-            </Text> )}
+          )}
           <Url onClick={() => window.open(post.link)}>
             <Data>
               <h1>{post.title}</h1>
@@ -293,7 +301,6 @@ export default function BoxPost({ headers, post, user }) {
 
 const ContainerBoxPost = styled.div`
   width: 611px;
-  /* background-color: blanchedalmond; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -318,8 +325,8 @@ const TooltipEdit = styled(Tooltip)`
 const Post = styled.div`
   z-index: 1;
   box-sizing: border-box;
-  padding: 18px 18px;
-  width: 611px;
+  padding: 17px 21px 20px 10px;
+  width: 100%;
   background: #171717;
   border-radius: 16px;
   display: flex;
@@ -330,17 +337,24 @@ const Post = styled.div`
   }
 
   @media (max-width: 974px) {
-    width: 100%;
+    max-width: 100%;
     border-radius: 0;
     padding: 15px;
+    padding: 9px 18px 15px 10px;
   }
 `;
 const ImageProfile = styled.div`
-  width: 70px;
+  width: 67px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 5px;
+  margin-right: 10px;
+
+  @media (max-width: 974px) {
+    width: 50px;
+    margin-right: 9px;
+  }
+
   img {
     width: 50px;
     height: 50px;
@@ -348,20 +362,17 @@ const ImageProfile = styled.div`
     object-fit: cover;
   }
   & > div {
-    height: 40px;
+    min-height: 37px;
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+
     svg {
       color: #ffffff;
       font-size: 20px;
       cursor: pointer;
-    }
-    @media (max-width: 974px) {
-      width: 60%;
-      height: 60px;
     }
   }
   p {
@@ -374,24 +385,12 @@ const ImageProfile = styled.div`
     text-align: center;
     color: #ffffff;
   }
-
-  @media (max-width: 974px) {
-    width: 20%;
-  }
 `;
 const PostContent = styled.div`
-  width: 510px;
-  height: 100%;
-  box-sizing: border-box;
+  width: 100%;
   gap: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  @media (max-width: 974px) {
-    width: 80%;
-  }
 `;
 const Text = styled.div`
   border-radius: 16px;
@@ -406,15 +405,11 @@ const Text = styled.div`
     text-decoration: none;
     color: white;
   }
-
-  @media (max-width: 974px) {
-    width: 98%;
-  }
 `;
 const Url = styled.div`
-  width: 503px;
+  width: 100%;
   border: 1px solid #333333;
-  border-radius: 14px;
+  border-radius: 13px;
   display: flex;
   justify-content: space-between;
   img {
@@ -426,9 +421,6 @@ const Url = styled.div`
   }
   :hover {
     cursor: pointer;
-  }
-  @media (max-width: 974px) {
-    width: 98%;
   }
 `;
 const Data = styled.div`
@@ -453,7 +445,7 @@ const Data = styled.div`
   }
 `;
 const BoxNameIcons = styled.div`
-  width: 502px;
+  width: 100%;
   height: 23px;
   display: flex;
   justify-content: space-between;
@@ -471,9 +463,6 @@ const BoxNameIcons = styled.div`
     color: #ffffff;
     cursor: pointer;
   }
-  @media (max-width: 974px) {
-    width: 98%;
-  }
 `;
 const BoxIcons = styled.div`
   width: 30%;
@@ -488,7 +477,6 @@ const BoxIcons = styled.div`
   }
 `;
 const InputEdition = styled.input`
-  width: 97%;
   height: 40px;
   &:disabled {
     background-color: #b7b7b7;
