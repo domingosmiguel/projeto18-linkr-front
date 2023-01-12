@@ -19,13 +19,7 @@ import { LoadingMorePosts } from '../../Components/LoadingMorePosts';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
-import {
-  BoxInputs,
-  ButtonPost,
-  EndMessage,
-  Image,
-  NewPosts,
-} from './TimelineStyle.js';
+import { BoxInputs, ButtonPost, Image, NewPosts } from './TimelineStyle.js';
 
 export default function TimelinePage({ config, deleteToken }) {
   const {
@@ -86,6 +80,7 @@ export default function TimelinePage({ config, deleteToken }) {
         if (response.data.number) setNewPostsNumber(response.data.number);
       })
       .catch((error) => {
+        console.log(error);
         alert(
           'An error occurred while trying to get the number of new posts, please try refreshing the page'
         );
@@ -99,7 +94,7 @@ export default function TimelinePage({ config, deleteToken }) {
     const body = { texto: textPost, link: linkPost, hashtags };
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, body, config)
-      .then((res) => {
+      .then(() => {
         setDisabled(false);
         setLinkPost('');
         setTextPost('');
@@ -148,7 +143,7 @@ export default function TimelinePage({ config, deleteToken }) {
         }
         if (err.response.status === 500) {
           alert(
-            'An error occured while trying to fetch the posts, please refresh the page'
+            'An error occurred while trying to fetch the posts, please refresh the page'
           );
         }
       });
@@ -220,20 +215,20 @@ export default function TimelinePage({ config, deleteToken }) {
                 <span>What are you going to share today?</span>
                 <InputLink
                   disabled={disabled}
-                  placeholder="http://..."
+                  placeholder='http://...'
                   onChange={(e) => setLinkPost(e.target.value)}
                   value={linkPost}
-                  type="url"
+                  type='url'
                   required
                 />
                 <InputText
                   disabled={disabled}
-                  placeholder="Talk about your link"
+                  placeholder='Talk about your link'
                   onChange={(e) => setTextPost(e.target.value)}
                   value={textPost}
-                  type="text"
+                  type='text'
                 />
-                <ButtonPost type="submit" disabled={disabled}>
+                <ButtonPost type='submit' disabled={disabled}>
                   {disabled === false ? 'Publish' : 'Publishing'}
                 </ButtonPost>
               </ContainerInputs>
@@ -241,7 +236,7 @@ export default function TimelinePage({ config, deleteToken }) {
           </form>
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new posts, load more!{' '}
-            <ion-icon name="refresh"></ion-icon>
+            <ion-icon name='refresh'></ion-icon>
           </NewPosts>
           {!posts ? (
             <Loading />
@@ -266,9 +261,9 @@ export default function TimelinePage({ config, deleteToken }) {
               hasMore ? (
                 <LoadingMorePosts ref={loaderRef} />
               ) : (
-                <EndMessage>
-                  No more posts from your friends are available
-                </EndMessage>
+                <MessageText>
+                  No more posts from your friends available
+                </MessageText>
               )
             ) : (
               <></>

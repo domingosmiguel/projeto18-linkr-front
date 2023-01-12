@@ -10,7 +10,7 @@ import Loading from '../../Components/Loading';
 import { LoadingMorePosts } from '../../Components/LoadingMorePosts';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
-import { EndMessage, NewPosts } from '../Timeline/TimelineStyle';
+import { NewPosts } from '../Timeline/TimelineStyle';
 
 const ContainerTimeline = styled.div`
   width: 100vw;
@@ -200,7 +200,7 @@ export default function Hashtag({ config, deleteToken }) {
           <TittlePosts>#{hashtag}</TittlePosts>
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new posts, load more!{' '}
-            <ion-icon name="refresh"></ion-icon>
+            <ion-icon name='refresh'></ion-icon>
           </NewPosts>
           {!posts ? (
             <Loading />
@@ -221,9 +221,9 @@ export default function Hashtag({ config, deleteToken }) {
               hasMore ? (
                 <LoadingMorePosts ref={loaderRef} />
               ) : (
-                <EndMessage>
-                  No more posts from this hashtag are available
-                </EndMessage>
+                <MessageText>
+                  No more posts for this hashtag available
+                </MessageText>
               )
             ) : (
               <></>

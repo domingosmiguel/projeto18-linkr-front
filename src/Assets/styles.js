@@ -130,12 +130,16 @@ export const InputText = styled.input`
 
 export const MessageText = styled.p`
   width: fit-content;
-  margin: 20px auto 0;
+  margin: 20px auto 20px;
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  font-size: 22px;
-  color: white;
+  font-size: 18px;
+  color: #fff;
+
+  @media (max-width: 974px) {
+    font-size: 14px;
+  }
 `;
 
 export const TittlePosts = styled.div`
