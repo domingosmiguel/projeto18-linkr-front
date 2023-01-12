@@ -101,6 +101,7 @@ export const NewPosts = styled.div`
 `;
 
 export const EndMessage = styled.p`
+  width: fit-content;
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;

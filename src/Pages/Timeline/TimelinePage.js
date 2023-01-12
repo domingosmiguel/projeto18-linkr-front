@@ -77,7 +77,9 @@ export default function TimelinePage({ config, deleteToken }) {
     axios
       .get(
         `${process.env.REACT_APP_BACKEND_URL}/new-posts/${
-          posts.length ? posts[0].id : 0
+          posts.length
+            ? posts[0].createdAt
+            : new Date('1995-12-17T03:24:00').toISOString()
         }`,
         config
       )
@@ -152,7 +154,7 @@ export default function TimelinePage({ config, deleteToken }) {
     axios
       .get(
         `${process.env.REACT_APP_BACKEND_URL}/timeline-posts/${
-          posts[posts.length - 1].id
+          posts[posts.length - 1].createdAt
         }`,
         config
       )

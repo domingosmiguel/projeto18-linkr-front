@@ -78,8 +78,10 @@ export default function Hashtag({ config, deleteToken }) {
   useInterval(() => {
     axios
       .get(
-        `${process.env.REACT_APP_BACKEND_URL}/new-posts/${
-          posts.length ? posts[0].id : 0
+        `${process.env.REACT_APP_BACKEND_URL}/new-hashtag-posts/${hashtag}/${
+          posts.length
+            ? posts[0].createdAt
+            : new Date('1995-12-17T03:24:00').toISOString()
         }`,
         config
       )
@@ -97,7 +99,7 @@ export default function Hashtag({ config, deleteToken }) {
     axios
       .get(
         `${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}/${
-          posts[posts.length - 1].id
+          posts[posts.length - 1].createdAt
         }`,
         config
       )
@@ -150,8 +152,8 @@ export default function Hashtag({ config, deleteToken }) {
         observer(res.data.posts);
       })
       .catch((err) => {
-        console.log(err.response.data);
-        if (err.response.status === 401) {
+        console.log(err.response?.data);
+        if (err.response?.status === 401) {
           deleteToken();
           navigate('/');
         }
@@ -216,7 +218,7 @@ export default function Hashtag({ config, deleteToken }) {
                 <LoadingMorePosts ref={loaderRef} />
               ) : (
                 <EndMessage>
-                  No more posts from your friends are available
+                  No more posts from this hashtag are available
                 </EndMessage>
               )
             ) : (
