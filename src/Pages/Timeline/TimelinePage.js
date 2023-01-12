@@ -15,7 +15,6 @@ import {
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
-import ModalDelete from '../../Components/ModalDelete';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
@@ -179,7 +178,6 @@ export default function TimelinePage({ config, deleteToken }) {
               </ContainerInputs>
             </BoxInputs>
           </form>
-          <ModalDelete config={config} />
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new posts, load more!{' '}
             <ion-icon name='refresh'></ion-icon>

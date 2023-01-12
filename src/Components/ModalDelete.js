@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 import LoadingDelete from './LoadingDelete';
 
-export default function ModalDelete({ config }) {
+export default function ModalDelete({ headers }) {
   const {
     modalIsOpen,
     setIsOpen,
@@ -44,12 +44,16 @@ export default function ModalDelete({ config }) {
     setDisabledModal(true);
 
     axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/user-posts/${id}`, config)
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/user-posts/${id}`, {
+        headers,
+      })
       .then((res) => {
         console.log(res.data);
         setVisible(true);
         axios
-          .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+          .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, {
+            headers,
+          })
           .then((response) => {
             setVisible(false);
             setIsOpen(false);
