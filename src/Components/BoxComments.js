@@ -2,7 +2,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { FiSend } from "react-icons/fi"
 import { useState } from "react";
-import { ThreeDots } from  'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner'
 
 export default function BoxComments({ open, postId, commentId, setCommentId, user }) {
     const [comment, setComment] = useState("");
@@ -12,7 +12,7 @@ export default function BoxComments({ open, postId, commentId, setCommentId, use
             Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
     };
-   
+
     function publishComment() {
         setDisabled(true)
         const body = { comment }
@@ -26,36 +26,39 @@ export default function BoxComments({ open, postId, commentId, setCommentId, use
                 console.log(err.response)
                 setDisabled(false)
                 setComment("")
+                if(err.response.status=== 401){
+                    alert("your comment was not published")
+                }
             })
     }
 
-    function atualizarComments(){
+    function atualizarComments() {
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${postId}`, config)
-        .then((res)=>{
-            setCommentId(res.data)
-            setDisabled(false)
-            setComment("")
-        })
-        .catch((err)=>{
-            console.log(err.response)
-            setDisabled(false)
-            setComment("")
-        })
+            .then((res) => {
+                setCommentId(res.data)
+                setDisabled(false)
+                setComment("")
+            })
+            .catch((err) => {
+                console.log(err.response)
+                setDisabled(false)
+                setComment("")
+            })
     }
 
     return (
         <ContainerBoxComments open={open}>
             {commentId === "" ?
-                <ThreeDots 
-                height="50" 
-                width="50" 
-                radius="9"
-                color="#353535" 
-                ariaLabel="three-dots-loading"
-                wrapperStyle={{}}
-                wrapperClassName=""
-                visible={true}
-                 />
+                <ThreeDots
+                    height="50"
+                    width="50"
+                    radius="9"
+                    color="#353535"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClassName=""
+                    visible={true}
+                />
                 :
                 commentId.map(
                     (c) => <BoxComment>
@@ -64,7 +67,14 @@ export default function BoxComments({ open, postId, commentId, setCommentId, use
                             <TextComment>
                                 <div>
                                     <p>{c.username}</p>
-                                    <span> {c.userId===c.quemPostou? "• post’s author":"•  following"}</span>
+                                    <span> {c.userId === c.quemPostou ?
+                                        "• post’s author"
+                                        :
+                                        c.following === true ?
+                                            "•  following"
+                                            :
+                                            ""}
+                                    </span>
                                 </div>
                                 <span>
                                     {c.txt}
