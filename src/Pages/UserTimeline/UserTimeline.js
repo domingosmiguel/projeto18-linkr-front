@@ -70,7 +70,7 @@ export default function UserTimeline({ config, deleteToken }) {
           timelinePosts.length
             ? timelinePosts[0].createdAt
             : new Date('1970-01-01 00:00:00').toISOString()
-        }`,
+        }/new`,
         config
       )
       .then((response) => {
@@ -88,7 +88,7 @@ export default function UserTimeline({ config, deleteToken }) {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
       .then((res) => {
-        setTimelinePosts(res.data.posts);
+        setTimelinePosts(res.data.timelinePosts);
         setHashtags(res.data.hashtags);
         setHasMore(res.data.hasMore);
         setNewPostsNumber(0);
@@ -106,7 +106,54 @@ export default function UserTimeline({ config, deleteToken }) {
         }
       });
   }
+  function getMorePosts() {
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/user/${id}/${
+          timelinePosts.at(-1).createdAt
+        }`,
+        config
+      )
+      .then((res) => {
+        setTimelinePosts([...timelinePosts, ...res.data.timelinePosts]);
+        setHasMore(res.data.hasMore);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response?.status === 401) {
+          deleteToken();
+          navigate('/');
+        }
+        if (err.response?.status === 500) {
+          alert(
+            'An error occurred while trying to fetch the posts, please refresh the page'
+          );
+        }
+      });
+  }
+  useEffect(() => {
+    observer();
+  }, [timelinePosts]);
 
+  function observer() {
+    const options = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entities) => {
+      const target = entities[0];
+
+      if (target.isIntersecting) {
+        getMorePosts();
+      }
+    }, options);
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+  }
   return (
     <ContainerTimeline>
       <Header
@@ -142,10 +189,16 @@ export default function UserTimeline({ config, deleteToken }) {
               />
             ))
           )}
-          {timelinePosts && timelinePosts.length && hasMore ? (
-            <LoadingMorePosts ref={loaderRef} />
+          {timelinePosts.length ? (
+            hasMore ? (
+              <LoadingMorePosts ref={loaderRef} />
+            ) : (
+              <MessageText>
+                No more posts from your friends available
+              </MessageText>
+            )
           ) : (
-            <MessageText>No more posts from your friends available</MessageText>
+            <> </>
           )}
         </ContainerPosts>
         {timelineUser.id !== user.id && (
