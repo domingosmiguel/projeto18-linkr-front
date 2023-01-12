@@ -351,7 +351,7 @@ const ImageProfile = styled.div`
   margin-right: 10px;
 
   @media (max-width: 974px) {
-    width: 50px;
+    width: 15%;
     margin-right: 9px;
   }
 
@@ -387,14 +387,13 @@ const ImageProfile = styled.div`
   }
 `;
 const PostContent = styled.div`
-  width: 100%;
+  width: 85%;
   gap: 10px;
   display: flex;
   flex-direction: column;
 `;
 const Text = styled.div`
   border-radius: 16px;
-
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
@@ -451,10 +450,8 @@ const BoxNameIcons = styled.div`
   justify-content: space-between;
   align-items: center;
   span {
-    width: 50%;
+    width: 20%;
     height: 23px;
-    left: 327px;
-    top: 489px;
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
@@ -465,7 +462,7 @@ const BoxNameIcons = styled.div`
   }
 `;
 const BoxIcons = styled.div`
-  width: 30%;
+  width: 100%;
   height: 23px;
   display: flex;
   justify-content: right;
