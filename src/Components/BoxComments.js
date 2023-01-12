@@ -3,6 +3,7 @@ import axios from "axios";
 import { FiSend } from "react-icons/fi"
 import { useState } from "react";
 import { ThreeDots } from 'react-loader-spinner'
+import { Link } from "react-router-dom";
 
 export default function BoxComments({ open, postId, commentId, setCommentId, user }) {
     const [comment, setComment] = useState("");
@@ -26,7 +27,7 @@ export default function BoxComments({ open, postId, commentId, setCommentId, use
                 console.log(err.response)
                 setDisabled(false)
                 setComment("")
-                if(err.response.status=== 401){
+                if (err.response.status === 401) {
                     alert("your comment was not published")
                 }
             })
@@ -66,7 +67,9 @@ export default function BoxComments({ open, postId, commentId, setCommentId, use
                             <img alt="profile" src={c.pictureUrl} />
                             <TextComment>
                                 <div>
-                                    <p>{c.username}</p>
+                                    <Link to={`/user/${c.postId}`}>
+                                        <p>{c.username}</p>
+                                    </Link>
                                     <span> {c.userId === c.quemPostou ?
                                         "• post’s author"
                                         :
@@ -172,6 +175,9 @@ const TextComment = styled.div`
         font-size: 14px;
         line-height: 17px;
         color: #ACACAC;
+    }
+    a{
+        text-decoration: none;
     }
 `
 const Line = styled.div`
