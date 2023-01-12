@@ -63,6 +63,7 @@ export default function TimelinePage({ config, deleteToken }) {
             'An error occurred while trying to fetch the posts, please refresh the page'
           );
         }
+        console.log(err);
       });
   }, []);
 
@@ -256,20 +257,10 @@ export default function TimelinePage({ config, deleteToken }) {
               />
             ))
           )}
-          {posts ? (
-            posts.length ? (
-              hasMore ? (
-                <LoadingMorePosts ref={loaderRef} />
-              ) : (
-                <MessageText>
-                  No more posts from your friends available
-                </MessageText>
-              )
-            ) : (
-              <></>
-            )
+          {posts && posts.length && hasMore ? (
+            <LoadingMorePosts ref={loaderRef} />
           ) : (
-            <></>
+            <MessageText>No more posts from your friends available</MessageText>
           )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />

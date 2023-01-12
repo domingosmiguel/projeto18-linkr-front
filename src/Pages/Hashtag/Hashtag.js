@@ -217,20 +217,10 @@ export default function Hashtag({ config, deleteToken }) {
               />
             ))
           )}
-          {posts ? (
-            posts.length ? (
-              hasMore ? (
-                <LoadingMorePosts ref={loaderRef} />
-              ) : (
-                <MessageText>
-                  No more posts for this hashtag available
-                </MessageText>
-              )
-            ) : (
-              <></>
-            )
+          {posts && posts.length && hasMore ? (
+            <LoadingMorePosts ref={loaderRef} />
           ) : (
-            <></>
+            <MessageText>No more posts for this hashtag available</MessageText>
           )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />
