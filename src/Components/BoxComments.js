@@ -12,7 +12,7 @@ export default function BoxComments({ open, postId, commentId, setCommentId, use
             Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
     };
-
+   
     function publishComment() {
         setDisabled(true)
         const body = { comment }
@@ -64,7 +64,7 @@ export default function BoxComments({ open, postId, commentId, setCommentId, use
                             <TextComment>
                                 <div>
                                     <p>{c.username}</p>
-                                    <span> •  following</span>
+                                    <span> {c.userId===c.quemPostou? "• post’s author":"•  following"}</span>
                                 </div>
                                 <span>
                                     {c.txt}
