@@ -84,7 +84,7 @@ export default function TimelinePage({ config, deleteToken }) {
         config
       )
       .then((response) => {
-        if (response.data) setNewPostsNumber(response.data);
+        if (response.data.number) setNewPostsNumber(response.data.number);
       })
       .catch((error) => {
         alert(
