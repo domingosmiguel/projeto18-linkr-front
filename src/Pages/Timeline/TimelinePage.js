@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useInterval from 'use-interval';
 import {
@@ -15,10 +15,17 @@ import {
 import BoxPost from '../../Components/BoxPost';
 import Header from '../../Components/Header';
 import Loading from '../../Components/Loading';
+import { LoadingMorePosts } from '../../Components/LoadingMorePosts';
 import SearchInput from '../../Components/SearchInput';
 import Trending from '../../Components/Trending';
 import { DadosContext } from '../../context/DadosContext';
-import { BoxInputs, ButtonPost, Image, NewPosts } from './TimelineStyle';
+import {
+  BoxInputs,
+  ButtonPost,
+  EndMessage,
+  Image,
+  NewPosts,
+} from './TimelineStyle.js';
 
 export default function TimelinePage({ config, deleteToken }) {
   const {
@@ -33,11 +40,12 @@ export default function TimelinePage({ config, deleteToken }) {
     hashtags,
     setHashtags,
   } = useContext(DadosContext);
-  // console.log('🚀 ~ file: TimelinePage.js:36 ~ TimelinePage ~ posts', posts);
   const [user, setUser] = useState({});
   const [sessionId, setSessionId] = useState(0);
   const [following, setFollowing] = useState([]);
   const [newPostsNumber, setNewPostsNumber] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const loaderRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +57,8 @@ export default function TimelinePage({ config, deleteToken }) {
         setPosts(res.data.posts);
         setFollowing(res.data.following);
         setHashtags(res.data.hashtags);
+        setHasMore(res.data.hasMore);
+        observer(res.data.posts);
       })
       .catch((err) => {
         if (err.response?.status === 401) {
@@ -138,6 +148,51 @@ export default function TimelinePage({ config, deleteToken }) {
       });
   }
 
+  function getMorePosts(posts) {
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND_URL}/timeline-posts/${
+          posts[posts.length - 1].id
+        }`,
+        config
+      )
+      .then((res) => {
+        setPosts(...posts, ...res.data.posts);
+        setHasMore(res.data.hasMore);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          deleteToken();
+          navigate('/');
+        }
+        if (err.response?.status === 500) {
+          alert(
+            'An error occurred while trying to fetch the posts, please refresh the page'
+          );
+        }
+      });
+  }
+
+  const observer = (posts) => {
+    const options = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entities) => {
+      const target = entities[0];
+
+      if (target.isIntersecting) {
+        getMorePosts(posts);
+      }
+    }, options);
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+  };
+
   return (
     <ContainerTimeline>
       <Header
@@ -159,20 +214,20 @@ export default function TimelinePage({ config, deleteToken }) {
                 <span>What are you going to share today?</span>
                 <InputLink
                   disabled={disabled}
-                  placeholder='http://...'
+                  placeholder="http://..."
                   onChange={(e) => setLinkPost(e.target.value)}
                   value={linkPost}
-                  type='url'
+                  type="url"
                   required
                 />
                 <InputText
                   disabled={disabled}
-                  placeholder='Talk about your link'
+                  placeholder="Talk about your link"
                   onChange={(e) => setTextPost(e.target.value)}
                   value={textPost}
-                  type='text'
+                  type="text"
                 />
-                <ButtonPost type='submit' disabled={disabled}>
+                <ButtonPost type="submit" disabled={disabled}>
                   {disabled === false ? 'Publish' : 'Publishing'}
                 </ButtonPost>
               </ContainerInputs>
@@ -180,7 +235,7 @@ export default function TimelinePage({ config, deleteToken }) {
           </form>
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new posts, load more!{' '}
-            <ion-icon name='refresh'></ion-icon>
+            <ion-icon name="refresh"></ion-icon>
           </NewPosts>
           {posts === '' ? (
             <Loading />
@@ -199,6 +254,13 @@ export default function TimelinePage({ config, deleteToken }) {
                 key={idx}
               />
             ))
+          )}
+          {hasMore ? (
+            <LoadingMorePosts ref={loaderRef} />
+          ) : (
+            <EndMessage>
+              No more posts from your friends are available
+            </EndMessage>
           )}
         </ContainerPosts>
         <Trending hashtags={hashtags} />

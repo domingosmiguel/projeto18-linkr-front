@@ -99,3 +99,12 @@ export const NewPosts = styled.div`
     height: 51px;
   }
 `;
+
+export const EndMessage = styled.p`
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  color: white;
+  margin-bottom: 20px;
+`;
