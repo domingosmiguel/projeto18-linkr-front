@@ -295,6 +295,7 @@ export default function BoxPost({ headers, post, user }) {
         commentId={commentId}
         setCommentId={setCommentId}
         user={user}
+        key={commentId}
       />
       <ModalDelete headers={headers} />
     </ContainerBoxPost>

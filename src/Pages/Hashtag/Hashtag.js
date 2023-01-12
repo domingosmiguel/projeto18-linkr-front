@@ -95,7 +95,7 @@ export default function Hashtag({ config, deleteToken }) {
       });
   }, 15000);
 
-  function getMorePosts(posts) {
+  function getMorePosts() {
     axios
       .get(
         `${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}/${
@@ -104,7 +104,7 @@ export default function Hashtag({ config, deleteToken }) {
         config
       )
       .then((res) => {
-        setPosts(...posts, ...res.data.posts);
+        setPosts([...posts, ...res.data.posts]);
         setHasMore(res.data.hasMore);
       })
       .catch((err) => {
@@ -120,7 +120,7 @@ export default function Hashtag({ config, deleteToken }) {
       });
   }
 
-  const observer = (posts) => {
+  function observer() {
     const options = {
       root: null,
       rootMargin: '20px',
@@ -131,14 +131,14 @@ export default function Hashtag({ config, deleteToken }) {
       const target = entities[0];
 
       if (target.isIntersecting) {
-        getMorePosts(posts);
+        getMorePosts();
       }
     }, options);
 
     if (loaderRef.current) {
       observer.observe(loaderRef.current);
     }
-  };
+  }
 
   useEffect(() => {
     axios
@@ -149,7 +149,6 @@ export default function Hashtag({ config, deleteToken }) {
         setPosts(res.data.posts);
         setHashtags(res.data.hashtags);
         setHasMore(res.data.hasMore);
-        observer(res.data.posts);
       })
       .catch((err) => {
         console.log(err.response?.data);
@@ -160,12 +159,17 @@ export default function Hashtag({ config, deleteToken }) {
       });
   }, []);
 
+  useEffect(() => {
+    observer();
+  }, [posts]);
+
   function updateTimeline() {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}`, config)
       .then((res) => {
         setPosts(res.data.posts);
         setHashtags(res.data.hashtags);
+        setHasMore(res.data.hasMore);
         setNewPostsNumber(0);
       })
       .catch((err) => {
