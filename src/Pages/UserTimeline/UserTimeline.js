@@ -177,6 +177,7 @@ export default function UserTimeline({ config, deleteToken }) {
                 post={post}
                 displayedPosts={timelinePosts}
                 setDisplayedPosts={setTimelinePosts}
+                updateTimeline={updateTimeline}
                 key={post.createdAt}
               />
             ))
