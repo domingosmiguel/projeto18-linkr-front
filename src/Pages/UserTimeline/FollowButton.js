@@ -103,7 +103,7 @@ const MyButton = styled.button`
   cursor: pointer;
 
   position: absolute;
-  top: 101px;
+  top: 78px;
   right: 0px;
 
   width: 112px;
@@ -119,6 +119,7 @@ const MyButton = styled.button`
   line-height: 17px;
 
   @media (max-width: 974px) {
+    top: 90px;
     right: 28px;
   }
 
