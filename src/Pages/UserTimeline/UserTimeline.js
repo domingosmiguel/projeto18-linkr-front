@@ -36,13 +36,6 @@ export default function UserTimeline({ config, deleteToken }) {
       .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
       .then((res) => {
         setUser(res.data.user);
-        res.data.timelinePosts.forEach((post, idx) => {
-          res.data.timelinePosts[idx] = {
-            ...post,
-            username: res.data.timelineUser.username,
-            pictureUrl: res.data.timelineUser.pictureUrl,
-          };
-        });
         setTimelinePosts(res.data.timelinePosts);
         setTimelineUser(res.data.timelineUser);
         setHashtags(res.data.hashtags);
@@ -173,7 +166,7 @@ export default function UserTimeline({ config, deleteToken }) {
           </ContainerImgNameUser>
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new post{newPostsNumber > 1 && 's'}, load more!{' '}
-            <ion-icon name='refresh'></ion-icon>
+            <ion-icon name="refresh"></ion-icon>
           </NewPosts>
           {timelinePosts === '' ? (
             <Loading />

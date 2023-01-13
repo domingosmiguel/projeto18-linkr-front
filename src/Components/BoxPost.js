@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 import BoxComments from './BoxComments';
 import ModalDelete from './ModalDelete';
+import Modal from './Modal';
 
 export default function BoxPost({ headers, post, user }) {
   const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
@@ -25,6 +26,7 @@ export default function BoxPost({ headers, post, user }) {
   const [commentId, setCommentId] = useState('');
   const [qtdComment, setQtdComment] = useState('');
   const [qtdReposts, setQtdReposts] = useState(0);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -211,16 +213,74 @@ export default function BoxPost({ headers, post, user }) {
     }
   };
 
+  useEffect(() => {
+    repostsCount();
+  }, []);
+
+  async function repostsCount() {
+    try {
+      const res = await axios.request({
+        baseURL: process.env.REACT_APP_BACKEND_URL,
+        url: `/posts/${post.id}/reposts`,
+        method: 'get',
+        headers,
+      });
+      setQtdReposts(res.data.number);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleRepost() {}
+
+  async function submitRepost() {
+    try {
+      await axios.request({
+        baseURL: process.env.REACT_APP_BACKEND_URL,
+        url: `/repost/${post.id}`,
+        method: 'post',
+        headers,
+      });
+      setModalOpen(false);
+      repostsCount();
+    } catch (error) {
+      if (error.response?.status === 404) {
+        alert('You already re-posted this post!');
+      }
+      console.log(error);
+    }
+  }
+
   return (
-    <ContainerBoxPost>
+    <ContainerBoxPost repost={post.repost}>
+      <Repost repost={post.repost}>
+        <MdRepeat />
+        <RepostText>
+          <p>Re-posted by</p>
+          <User onClick={() => navigate(`/user/${post.reposterId}`)}>
+            {user.username === post.reposterName ? 'you' : post.reposterName}
+          </User>
+        </RepostText>
+      </Repost>
       <Post>
         <ImageProfile>
           <img src={post.pictureUrl} alt="profile" />
           <div>
             {postLikes.liked ? (
-              <AiFillHeart style={{ color: 'red' }} onClick={dislike} />
+              <AiFillHeart
+                style={{ color: 'red' }}
+                onClick={() => {
+                  if (post.repost) return;
+                  else dislike();
+                }}
+              />
             ) : (
-              <AiOutlineHeart onClick={like} />
+              <AiOutlineHeart
+                onClick={() => {
+                  if (post.repost) return;
+                  else like();
+                }}
+              />
             )}
             <p id={`post-likes-info-${post.id}`}>
               {postLikes.count} Like{postLikes.count !== 1 && 's'}
@@ -240,7 +300,12 @@ export default function BoxPost({ headers, post, user }) {
             </p>
           </div>
           <div>
-            <MdRepeat onClick={'lsadkjal'} />
+            <MdRepeat
+              onClick={() => {
+                if (post.repost) return;
+                else handleRepost();
+              }}
+            />
             <p>{qtdReposts} re-posts</p>
           </div>
         </ImageProfile>
@@ -249,11 +314,13 @@ export default function BoxPost({ headers, post, user }) {
             <Link to={`/user/${post.userId}`}>
               <span>{post.username}</span>
             </Link>
-            {user.id === post.userId && (
-              <BoxIcons>
+            {user.id === post.userId && !post.repost ? (
+              <BoxIcons repost={post.repost}>
                 <HiPencilAlt onClick={() => makeEdition(post.id)} />
                 <HiTrash onClick={() => openModal(post.id)} />
               </BoxIcons>
+            ) : (
+              <></>
             )}
           </BoxNameIcons>
           {idEdition === post.id ? (
@@ -297,6 +364,7 @@ export default function BoxPost({ headers, post, user }) {
         setCommentId={setCommentId}
         user={user}
         key={commentId}
+        repost={post.repost}
       />
       <ModalDelete headers={headers} />
     </ContainerBoxPost>
@@ -310,12 +378,15 @@ const ContainerBoxPost = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 16px;
-  margin-top: 15px;
+  margin-top: ${(props) => (props.repost ? '50px' : '15px')};
   position: relative;
 
   @media (max-width: 974px) {
     width: 100%;
     border-radius: 0;
+  }
+  @media (max-width: 498px) {
+    margin-top: ${(props) => (props.repost ? '60px' : '15px')};
   }
 `;
 const TooltipEdit = styled(Tooltip)`
@@ -478,7 +549,7 @@ const BoxIcons = styled.div`
     font-size: 20px;
     color: #ffffff;
     margin-left: 10px;
-    cursor: pointer;
+    cursor: ${(props) => (props.repost ? 'default' : 'pointer')};
   }
 `;
 const InputEdition = styled.input`
@@ -487,5 +558,48 @@ const InputEdition = styled.input`
     background-color: #b7b7b7;
     color: #464141;
     cursor: not-allowed;
+  }
+`;
+const Repost = styled.div`
+  display: ${(props) => (props.repost ? 'flex' : 'none')};
+  gap: 4px;
+  height: 100%;
+  width: 611px;
+  color: #fff;
+  background-color: #1e1e1e;
+  box-sizing: border-box;
+  padding: 10px 10px 0;
+  border-top-left-radius: 13px;
+  border-top-right-radius: 13px;
+  border-bottom-left-radius: -13px;
+  position: absolute;
+  top: -35px;
+  left: 0;
+  z-index: 0;
+  color: #fff;
+  word-wrap: break-word;
+  word-break: break-all;
+  @media (max-width: 974px) {
+    width: 100%;
+  }
+  @media (max-width: 498px) {
+    top: -45px;
+  }
+`;
+
+const RepostText = styled.div`
+  display: flex;
+  gap: 5px;
+  color: #b7b7b7;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+`;
+
+const User = styled.p`
+  color: #fff;
+  :hover {
+    cursor: pointer;
   }
 `;
