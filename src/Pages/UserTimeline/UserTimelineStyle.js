@@ -4,6 +4,7 @@ export const ContainerImgNameUser = styled.div`
   width: 100%;
   height: 100px;
   margin-top: 60px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
