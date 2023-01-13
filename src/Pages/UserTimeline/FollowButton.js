@@ -7,7 +7,10 @@ import styled, { css } from 'styled-components';
 export default function FollowButton({ headers }) {
   const [follow, setFollow] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [buttonTxt, setButtonTxt] = useState(true);
   const { id } = useParams();
+
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     (async () => {
@@ -15,7 +18,7 @@ export default function FollowButton({ headers }) {
         const {
           data: { isFollower },
         } = await axios.request({
-          baseURL: process.env.REACT_APP_BACKEND_URL,
+          baseURL,
           url: `/follows/${id}`,
           headers,
         });
@@ -34,7 +37,7 @@ export default function FollowButton({ headers }) {
     try {
       if (!follow) {
         await axios.request({
-          baseURL: process.env.REACT_APP_BACKEND_URL,
+          baseURL,
           url: `/follows/${id}`,
           method: 'post',
           headers,
@@ -42,7 +45,7 @@ export default function FollowButton({ headers }) {
         setFollow(true);
       } else {
         await axios.request({
-          baseURL: process.env.REACT_APP_BACKEND_URL,
+          baseURL,
           url: `/follows/${id}`,
           method: 'delete',
           headers,
@@ -56,9 +59,9 @@ export default function FollowButton({ headers }) {
       setDisabled(false);
     }
   };
-  const buttonTxt = () => {
+  useEffect(() => {
     if (disabled)
-      return (
+      setButtonTxt(
         <ReactLoading
           type='bubbles'
           color={follow ? '#1877f2' : '#ffffff'}
@@ -66,13 +69,13 @@ export default function FollowButton({ headers }) {
           width={100}
         ></ReactLoading>
       );
-    else if (follow) return 'Unfollow';
-    else return 'Follow';
-  };
+    else if (follow) setButtonTxt('Unfollow');
+    else setButtonTxt('Follow');
+  }, [disabled, follow]);
 
   return (
     <MyButton follow={follow} disabled={disabled} onClick={handleClick}>
-      {buttonTxt()}
+      {buttonTxt}
     </MyButton>
   );
 }

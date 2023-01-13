@@ -11,7 +11,6 @@ import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
 import { DadosContext } from '../context/DadosContext';
 import BoxComments from './BoxComments';
-import ModalDelete from './ModalDelete';
 import Modal from './Modal';
 
 export default function BoxPost({ headers, post, user }) {
@@ -27,6 +26,7 @@ export default function BoxPost({ headers, post, user }) {
   const [qtdComment, setQtdComment] = useState('');
   const [qtdReposts, setQtdReposts] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [modalAction, setModalAction] = useState('');
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -36,9 +36,11 @@ export default function BoxPost({ headers, post, user }) {
     liked: false,
   });
 
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
+
   function qtdComments(id) {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/post-comments-all/${id}`, {
+      .get(`${baseURL}/post-comments-all/${id}`, {
         headers,
       })
       .then((res) => {
@@ -63,7 +65,7 @@ export default function BoxPost({ headers, post, user }) {
   useEffect(() => {
     if (comments) {
       axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/post-comment/${post.id}`, {
+        .get(`${baseURL}/post-comment/${post.id}`, {
           headers,
         })
         .then((res) => {
@@ -79,7 +81,7 @@ export default function BoxPost({ headers, post, user }) {
     (async () => {
       try {
         const { data: likeInfo } = await axios.request({
-          baseURL: process.env.REACT_APP_BACKEND_URL,
+          baseURL,
           url: `/${post.id}/likes`,
           headers,
         });
@@ -107,11 +109,7 @@ export default function BoxPost({ headers, post, user }) {
         .filter((elem) => elem.startsWith('#'));
       const body = { texto: textEdited, hashtags };
       axios
-        .patch(
-          `${process.env.REACT_APP_BACKEND_URL}/post-edition/${id}`,
-          body,
-          { headers }
-        )
+        .patch(`${baseURL}/post-edition/${id}`, body, { headers })
         .then(() => {
           setDisabledEdition(true);
           updateTimeline();
@@ -130,7 +128,7 @@ export default function BoxPost({ headers, post, user }) {
 
   function updateTimeline() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, { headers })
+      .get(`${baseURL}/timeline-posts`, { headers })
       .then((response) => {
         setPosts(response.data.posts);
         setHashtags(response.data.hashtags);
@@ -149,11 +147,6 @@ export default function BoxPost({ headers, post, user }) {
           );
         }
       });
-  }
-
-  function openModal(postId) {
-    setId(postId);
-    setIsOpen(true);
   }
 
   const tooltipTxt = () => {
@@ -188,7 +181,7 @@ export default function BoxPost({ headers, post, user }) {
   const like = async () => {
     try {
       await axios.request({
-        baseURL: process.env.REACT_APP_BACKEND_URL,
+        baseURL,
         url: `/${post.id}/userLike`,
         method: 'post',
         headers,
@@ -202,7 +195,7 @@ export default function BoxPost({ headers, post, user }) {
   const dislike = async () => {
     try {
       await axios.request({
-        baseURL: process.env.REACT_APP_BACKEND_URL,
+        baseURL,
         url: `/${post.id}/userLike`,
         method: 'delete',
         headers,
@@ -220,7 +213,7 @@ export default function BoxPost({ headers, post, user }) {
   async function repostsCount() {
     try {
       const res = await axios.request({
-        baseURL: process.env.REACT_APP_BACKEND_URL,
+        baseURL,
         url: `/posts/${post.id}/reposts`,
         method: 'get',
         headers,
@@ -236,21 +229,49 @@ export default function BoxPost({ headers, post, user }) {
   async function submitRepost() {
     try {
       await axios.request({
-        baseURL: process.env.REACT_APP_BACKEND_URL,
+        baseURL,
         url: `/repost/${post.id}`,
         method: 'post',
         headers,
       });
-      setModalOpen(false);
       repostsCount();
     } catch (error) {
       if (error.response?.status === 404) {
         alert('You already re-posted this post!');
       }
       console.log(error);
+    } finally {
+      setModalOpen(false);
     }
   }
 
+  async function submitDelete() {
+    try {
+      await axios.request({
+        baseURL,
+        url: `/user-posts/${post.id}`,
+        method: 'delete',
+        headers,
+      });
+    } catch (error) {
+      if (error.response.status === 401 || error.response.status === 404) {
+        alert('Unable to run task');
+      }
+      if (error.response.status === 500) {
+        alert('internal server error');
+      }
+      console.log(error.response);
+    }
+  }
+  const handleModalAction = {
+    delete: submitDelete,
+    share: submitRepost,
+  };
+
+  const handleAction = (action) => {
+    setModalOpen(true);
+    setModalAction(action);
+  };
   return (
     <ContainerBoxPost repost={post.repost}>
       <Repost repost={post.repost}>
@@ -264,7 +285,7 @@ export default function BoxPost({ headers, post, user }) {
       </Repost>
       <Post>
         <ImageProfile>
-          <img src={post.pictureUrl} alt="profile" />
+          <img src={post.pictureUrl} alt='profile' />
           <div>
             {postLikes.liked ? (
               <AiFillHeart
@@ -286,8 +307,8 @@ export default function BoxPost({ headers, post, user }) {
               {postLikes.count} Like{postLikes.count !== 1 && 's'}
             </p>
             <TooltipEdit
-              variant="light"
-              place="bottom"
+              variant='light'
+              place='bottom'
               anchorId={`post-likes-info-${post.id}`}
               content={tooltipTxt()}
             />
@@ -303,7 +324,7 @@ export default function BoxPost({ headers, post, user }) {
             <MdRepeat
               onClick={() => {
                 if (post.repost) return;
-                else handleRepost();
+                else handleAction('share');
               }}
             />
             <p>{qtdReposts} re-posts</p>
@@ -317,7 +338,7 @@ export default function BoxPost({ headers, post, user }) {
             {user.id === post.userId && !post.repost ? (
               <BoxIcons repost={post.repost}>
                 <HiPencilAlt onClick={() => makeEdition(post.id)} />
-                <HiTrash onClick={() => openModal(post.id)} />
+                <HiTrash onClick={() => handleAction('delete')} />
               </BoxIcons>
             ) : (
               <></>
@@ -330,7 +351,7 @@ export default function BoxPost({ headers, post, user }) {
                 disabled={disabledEdition}
                 onChange={(e) => setTextEdited(e.target.value)}
                 value={textEdited}
-                type="text"
+                type='text'
                 onKeyUp={(event) => editionPostText(event, post.id)}
               />
             ) : (
@@ -350,7 +371,7 @@ export default function BoxPost({ headers, post, user }) {
               <h3>{post.link}</h3>
             </Data>
             {regex.test(post.image) ? (
-              <img src={post.image} alt="link" />
+              <img src={post.image} alt='link' />
             ) : (
               <></>
             )}
@@ -366,7 +387,13 @@ export default function BoxPost({ headers, post, user }) {
         key={commentId}
         repost={post.repost}
       />
-      <ModalDelete headers={headers} />
+      {isModalOpen && (
+        <Modal
+          handleClick={handleModalAction}
+          setOpenModal={setModalOpen}
+          action={modalAction}
+        />
+      )}
     </ContainerBoxPost>
   );
 }

@@ -178,7 +178,7 @@ export default function UserTimeline({ config, deleteToken }) {
                 headers={config.headers}
                 user={user}
                 post={post}
-                key={post.id}
+                key={post.createdAt}
               />
             ))
           )}
