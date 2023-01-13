@@ -239,7 +239,7 @@ export default function TimelinePage({ config, deleteToken }) {
             {newPostsNumber} new post{newPostsNumber > 1 && 's'}, load more!{' '}
             <ion-icon name='refresh'></ion-icon>
           </NewPosts>
-          {!posts ? (
+          {posts === '' ? (
             <Loading />
           ) : !posts.length && !newPostsNumber ? (
             <MessageText>
