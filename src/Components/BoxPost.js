@@ -284,8 +284,8 @@ export default function BoxPost({ headers, post, user }) {
         </RepostText>
       </Repost>
       <Post>
-        <ImageProfile>
-          <img src={post.pictureUrl} alt='profile' />
+        <ImageProfile repost={post.repost}>
+          <img src={post.pictureUrl} alt="profile" />
           <div>
             {postLikes.liked ? (
               <AiFillHeart
@@ -307,8 +307,8 @@ export default function BoxPost({ headers, post, user }) {
               {postLikes.count} Like{postLikes.count !== 1 && 's'}
             </p>
             <TooltipEdit
-              variant='light'
-              place='bottom'
+              variant="light"
+              place="bottom"
               anchorId={`post-likes-info-${post.id}`}
               content={tooltipTxt()}
             />
@@ -351,7 +351,7 @@ export default function BoxPost({ headers, post, user }) {
                 disabled={disabledEdition}
                 onChange={(e) => setTextEdited(e.target.value)}
                 value={textEdited}
-                type='text'
+                type="text"
                 onKeyUp={(event) => editionPostText(event, post.id)}
               />
             ) : (
@@ -371,7 +371,7 @@ export default function BoxPost({ headers, post, user }) {
               <h3>{post.link}</h3>
             </Data>
             {regex.test(post.image) ? (
-              <img src={post.image} alt='link' />
+              <img src={post.image} alt="link" />
             ) : (
               <></>
             )}
@@ -474,7 +474,7 @@ const ImageProfile = styled.div`
     svg {
       color: #ffffff;
       font-size: 20px;
-      cursor: pointer;
+      cursor: ${(props) => (props.repost ? 'default' : 'pointer')};
     }
   }
   p {
@@ -576,7 +576,7 @@ const BoxIcons = styled.div`
     font-size: 20px;
     color: #ffffff;
     margin-left: 10px;
-    cursor: ${(props) => (props.repost ? 'default' : 'pointer')};
+    cursor: pointer;
   }
 `;
 const InputEdition = styled.input`
