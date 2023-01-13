@@ -90,10 +90,10 @@ const Positioner = styled.div`
   top: 14px;
   left: 50%;
   margin-left: calc(-563px / 2);
-  z-index: 2;
+  z-index: 5;
 
   @media (max-width: 974px) {
-    z-index: 1;
+    z-index: 3;
     top: 14px;
     position: absolute;
     margin-left: 10px;

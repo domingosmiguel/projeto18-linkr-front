@@ -52,16 +52,20 @@ const ContainerPosts = styled.div`
 `;
 
 const TittlePosts = styled.div`
-  width: 145px;
   height: 64px;
-  margin-top: 53px;
-  margin-bottom: 43px;
+  padding: 53px 0 92px;
   font-family: 'Oswald', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 43px;
   line-height: 64px;
   color: #ffffff;
+
+  @media (max-width: 974px) {
+    padding: 75px 17px 47px;
+    font-size: 33px;
+    line-height: 45px;
+  }
 `;
 
 export default function Hashtag({ config, deleteToken }) {
