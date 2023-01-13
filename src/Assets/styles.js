@@ -160,8 +160,7 @@ export const TittlePosts = styled.div`
   }
 
   img {
-    width: 100%;
-    max-width: 55px;
+    min-width: 55px;
     height: 55px;
     border-radius: 50%;
     margin: 0 18px;
