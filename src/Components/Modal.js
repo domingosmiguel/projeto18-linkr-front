@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 export default function Modal({ handleClick, setOpenModal, action }) {
   const txtDefiner = {
@@ -23,10 +23,10 @@ export default function Modal({ handleClick, setOpenModal, action }) {
       >
         <ModalText>{txtDefiner[action]?.children}</ModalText>
         <ModalButtonsContainer>
-          <ModalButton onClick={() => setOpenModal(false)}>
+          <ModalButton confirm={false} onClick={() => setOpenModal(false)}>
             {txtDefiner[action]?.cancel}
           </ModalButton>
-          <ModalButton onClick={handleClick[action]}>
+          <ModalButton confirm={true} onClick={handleClick[action]}>
             {txtDefiner[action]?.confirm}
           </ModalButton>
         </ModalButtonsContainer>
@@ -43,7 +43,7 @@ const ModalBackground = styled.div`
   bottom: 0;
 
   background-color: rgba(255, 255, 255, 0.9);
-  z-index: 3;
+  z-index: 5;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,82 +60,78 @@ const slideInFwdCenter = keyframes`
   }
 `;
 const ModalContainer = styled.div`
-  background-color: #fff;
-  max-width: 300px;
+  max-width: 597px;
   max-height: 270px;
+  width: 100%;
   height: 100%;
-  padding: 25px;
+  margin: 25px;
+  padding: 15px 25px 38px;
   border-radius: 25px;
-  background: linear-gradient(145deg, #e6e6e6, #ffffff);
+  background-color: #333;
+  color: #fff;
   box-shadow: 8.5px 10.9px 110.6px -43px rgba(0, 0, 0, 0.173),
     48px 62px 126px -43px rgba(0, 0, 0, 0.25);
   animation: ${slideInFwdCenter} 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   display: flex;
   flex-direction: column;
+  align-items: center;
+
+  &,
+  & :nth-child(n) {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+  }
 `;
 const ModalText = styled.div`
   height: 100%;
   font-size: 20px;
   line-height: 26px;
   text-align: center;
+  width: 100%;
+  min-width: 280px;
+  max-width: 340px;
+
+  display: flex;
+  align-items: center;
   letter-spacing: 0.04em;
+  font-size: 29px;
+  line-height: 35px;
 `;
 const ModalButtonsContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 280px;
+  max-width: 300px;
 `;
+const ButtonConfirm = css`
+  background: #ffffff;
+  color: #1877f2;
+`;
+const ButtonDelete = css`
+  background: #1877f2;
+  color: #ffffff;
+`;
+
 const ModalButton = styled.button`
-  appearance: none;
-  background-color: #fafbfc;
-  border: 1px solid rgba(27, 31, 35, 0.15);
-  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
-    rgba(255, 255, 255, 0.25) 0 1px 0 inset;
-  color: #24292e;
-  display: inline-block;
-  list-style: none;
-  position: relative;
-  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
-  user-select: none;
-  touch-action: manipulation;
-  vertical-align: middle;
-  white-space: nowrap;
-  word-wrap: break-word;
-  padding: 0.6em 1em;
-  font-size: 18px;
-  line-height: 21px;
-  border-radius: 0.5em;
-  box-shadow: 6px 6px 12px #c5c5c5;
+  width: 134px;
+  height: 37px;
+  border-radius: 5px;
+  border: none;
   cursor: pointer;
-  margin-right: 10px;
-  :hover {
-    background-color: #f3f4f6;
-    text-decoration: none;
-    transition-duration: 0.1s;
+  font-size: 18px;
+  line-height: 22px;
+
+  ${({ confirm }) => (confirm ? ButtonConfirm : ButtonDelete)}
+
+  &:active {
+    transform: translateY(4px);
   }
 
-  :disabled {
-    background-color: #fafbfc;
-    border-color: rgba(27, 31, 35, 0.15);
-    color: #959da5;
+  &:disabled {
+    opacity: 0.9;
     cursor: default;
-  }
-
-  :active {
-    background-color: #edeff2;
-    box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
-    transition: none 0s;
-  }
-
-  :focus {
-    outline: 1px transparent;
-  }
-
-  :before {
-    display: none;
-  }
-
-  :-webkit-details-marker {
-    display: none;
   }
 `;
