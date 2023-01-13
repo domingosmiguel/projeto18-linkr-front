@@ -253,7 +253,7 @@ export default function TimelinePage({ config, deleteToken }) {
                 headers={config.headers}
                 user={user}
                 post={p}
-                key={p.id}
+                key={p.createdAt}
               />
             ))
           )}

@@ -213,7 +213,7 @@ export default function Hashtag({ config, deleteToken }) {
                 headers={config.headers}
                 user={user}
                 post={p}
-                key={p.id}
+                key={p.createdAt}
               />
             ))
           )}
