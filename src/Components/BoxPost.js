@@ -1,7 +1,7 @@
 import axios from 'axios';
 import 'linkify-plugin-hashtag';
 import Linkify from 'linkify-react';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai';
 import { HiPencilAlt, HiTrash } from 'react-icons/hi';
 import { MdRepeat } from 'react-icons/md';
@@ -9,7 +9,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import styled from 'styled-components';
-import { DadosContext } from '../context/DadosContext';
 import BoxComments from './BoxComments';
 import Modal from './Modal';
 
@@ -19,8 +18,8 @@ export default function BoxPost({
   user,
   displayedPosts,
   setDisplayedPosts,
+  updateTimeline,
 }) {
-  const { setPosts, setHashtags } = useContext(DadosContext);
   const inputRef = useRef(null);
   const [editing, setEditing] = useState(false);
   const [idEdition, setIdEdition] = useState('');
@@ -117,9 +116,11 @@ export default function BoxPost({
       const body = { texto: textEdited, hashtags };
       axios
         .patch(`${baseURL}/post-edition/${id}`, body, { headers })
-        .then(() => {
+        .then(async () => {
           setDisabledEdition(true);
-          updateTimeline();
+          await updateTimeline();
+          setDisabledEdition(false);
+          setEditing(false);
         })
         .catch((err) => {
           setDisabledEdition(false);
@@ -131,29 +132,6 @@ export default function BoxPost({
           }
         });
     }
-  }
-
-  function updateTimeline() {
-    axios
-      .get(`${baseURL}/timeline-posts`, { headers })
-      .then((response) => {
-        setPosts(response.data.posts);
-        setHashtags(response.data.hashtags);
-        setDisabledEdition(false);
-        setEditing(false);
-      })
-      .catch((error) => {
-        console.log(error.response.status);
-        if (error.response.status === 401) {
-          localStorage.clear();
-          navigate('/');
-        }
-        if (error.response.status === 500) {
-          alert(
-            'An error occurred while trying to fetch the posts, please refresh the page'
-          );
-        }
-      });
   }
 
   const tooltipTxt = () => {

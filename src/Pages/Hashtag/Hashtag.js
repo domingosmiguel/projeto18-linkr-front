@@ -219,6 +219,7 @@ export default function Hashtag({ config, deleteToken }) {
                 post={p}
                 displayedPosts={posts}
                 setDisplayedPosts={setPosts}
+                updateTimeline={updateTimeline}
                 key={p.createdAt}
               />
             ))
