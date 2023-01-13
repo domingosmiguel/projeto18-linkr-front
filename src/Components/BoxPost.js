@@ -24,6 +24,7 @@ export default function BoxPost({ headers, post, user }) {
   const [comments, setComments] = useState(false);
   const [commentId, setCommentId] = useState('');
   const [qtdComment, setQtdComment] = useState('');
+  const [qtdReposts, setQtdReposts] = useState(0);
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
 
@@ -239,8 +240,8 @@ export default function BoxPost({ headers, post, user }) {
             </p>
           </div>
           <div>
-            <MdRepeat />
-            <p>0 re-posts</p>
+            <MdRepeat onClick={'lsadkjal'} />
+            <p>{qtdReposts} re-posts</p>
           </div>
         </ImageProfile>
         <PostContent>
