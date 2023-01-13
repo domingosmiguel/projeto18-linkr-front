@@ -42,9 +42,11 @@ export default function TimelinePage({ config, deleteToken }) {
   const loaderRef = useRef(null);
   const navigate = useNavigate();
 
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
+
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+      .get(`${baseURL}/timeline-posts`, config)
       .then((res) => {
         setUser(res.data.user);
         setSessionId(res.data.sessionId);
@@ -70,7 +72,7 @@ export default function TimelinePage({ config, deleteToken }) {
   useInterval(() => {
     axios
       .get(
-        `${process.env.REACT_APP_BACKEND_URL}/new-posts/${
+        `${baseURL}/new-posts/${
           posts.length
             ? posts[0].createdAt
             : new Date('1970-01-01 00:00:00').toISOString()
@@ -94,7 +96,7 @@ export default function TimelinePage({ config, deleteToken }) {
     const hashtags = textPost.split(' ').filter((elem) => elem.startsWith('#'));
     const body = { texto: textPost, link: linkPost, hashtags };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, body, config)
+      .post(`${baseURL}/timeline-posts`, body, config)
       .then(() => {
         setDisabled(false);
         setLinkPost('');
@@ -129,7 +131,7 @@ export default function TimelinePage({ config, deleteToken }) {
 
   function updateTimeline() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/timeline-posts`, config)
+      .get(`${baseURL}/timeline-posts`, config)
       .then((res) => {
         setPosts(res.data.posts);
         setHashtags(res.data.hashtags);
@@ -153,9 +155,7 @@ export default function TimelinePage({ config, deleteToken }) {
   function getMorePosts() {
     axios
       .get(
-        `${process.env.REACT_APP_BACKEND_URL}/timeline-posts/${
-          posts[posts.length - 1].createdAt
-        }`,
+        `${baseURL}/timeline-posts/${posts[posts.length - 1].createdAt}`,
         config
       )
       .then((res) => {
@@ -253,6 +253,8 @@ export default function TimelinePage({ config, deleteToken }) {
                 headers={config.headers}
                 user={user}
                 post={p}
+                displayedPosts={posts}
+                setDisplayedPosts={setPosts}
                 key={p.createdAt}
               />
             ))

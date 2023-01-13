@@ -13,8 +13,14 @@ import { DadosContext } from '../context/DadosContext';
 import BoxComments from './BoxComments';
 import Modal from './Modal';
 
-export default function BoxPost({ headers, post, user }) {
-  const { setIsOpen, setId, setPosts, setHashtags } = useContext(DadosContext);
+export default function BoxPost({
+  headers,
+  post,
+  user,
+  displayedPosts,
+  setDisplayedPosts,
+}) {
+  const { setPosts, setHashtags } = useContext(DadosContext);
   const inputRef = useRef(null);
   const [editing, setEditing] = useState(false);
   const [idEdition, setIdEdition] = useState('');
@@ -25,7 +31,8 @@ export default function BoxPost({ headers, post, user }) {
   const [commentId, setCommentId] = useState('');
   const [qtdComment, setQtdComment] = useState('');
   const [qtdReposts, setQtdReposts] = useState(0);
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
   const [modalAction, setModalAction] = useState('');
 
   const regex = new RegExp('https?://(www.)?[^/]*?/?([^$]*?$)?');
@@ -224,9 +231,8 @@ export default function BoxPost({ headers, post, user }) {
     }
   }
 
-  function handleRepost() {}
-
   async function submitRepost() {
+    setModalLoading(true);
     try {
       await axios.request({
         baseURL,
@@ -241,18 +247,24 @@ export default function BoxPost({ headers, post, user }) {
       }
       console.log(error);
     } finally {
-      setModalOpen(false);
+      setOpenModal(false);
     }
   }
 
   async function submitDelete() {
+    setModalLoading(true);
     try {
-      await axios.request({
+      const {
+        data: { createdAt },
+      } = await axios.request({
         baseURL,
         url: `/user-posts/${post.id}`,
         method: 'delete',
         headers,
       });
+      setDisplayedPosts([
+        ...displayedPosts.filter((post) => post.createdAt !== createdAt),
+      ]);
     } catch (error) {
       if (error.response.status === 401 || error.response.status === 404) {
         alert('Unable to run task');
@@ -261,6 +273,8 @@ export default function BoxPost({ headers, post, user }) {
         alert('internal server error');
       }
       console.log(error.response);
+    } finally {
+      setOpenModal(false);
     }
   }
   const handleModalAction = {
@@ -269,7 +283,8 @@ export default function BoxPost({ headers, post, user }) {
   };
 
   const handleAction = (action) => {
-    setModalOpen(true);
+    setModalLoading(false);
+    setOpenModal(true);
     setModalAction(action);
   };
   return (
@@ -285,7 +300,7 @@ export default function BoxPost({ headers, post, user }) {
       </Repost>
       <Post>
         <ImageProfile repost={post.repost}>
-          <img src={post.pictureUrl} alt="profile" />
+          <img src={post.pictureUrl} alt='profile' />
           <div>
             {postLikes.liked ? (
               <AiFillHeart
@@ -307,8 +322,8 @@ export default function BoxPost({ headers, post, user }) {
               {postLikes.count} Like{postLikes.count !== 1 && 's'}
             </p>
             <TooltipEdit
-              variant="light"
-              place="bottom"
+              variant='light'
+              place='bottom'
               anchorId={`post-likes-info-${post.id}`}
               content={tooltipTxt()}
             />
@@ -351,7 +366,7 @@ export default function BoxPost({ headers, post, user }) {
                 disabled={disabledEdition}
                 onChange={(e) => setTextEdited(e.target.value)}
                 value={textEdited}
-                type="text"
+                type='text'
                 onKeyUp={(event) => editionPostText(event, post.id)}
               />
             ) : (
@@ -371,7 +386,7 @@ export default function BoxPost({ headers, post, user }) {
               <h3>{post.link}</h3>
             </Data>
             {regex.test(post.image) ? (
-              <img src={post.image} alt="link" />
+              <img src={post.image} alt='link' />
             ) : (
               <></>
             )}
@@ -387,10 +402,11 @@ export default function BoxPost({ headers, post, user }) {
         key={commentId}
         repost={post.repost}
       />
-      {isModalOpen && (
+      {openModal && (
         <Modal
           handleClick={handleModalAction}
-          setOpenModal={setModalOpen}
+          setOpenModal={setOpenModal}
+          loading={modalLoading}
           action={modalAction}
         />
       )}

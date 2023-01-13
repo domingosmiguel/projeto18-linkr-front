@@ -1,7 +1,8 @@
 import React from 'react';
+import ReactLoading from 'react-loading';
 import styled, { css, keyframes } from 'styled-components';
 
-export default function Modal({ handleClick, setOpenModal, action }) {
+export default function Modal({ handleClick, setOpenModal, action, loading }) {
   const txtDefiner = {
     delete: {
       confirm: 'Yes, delete it',
@@ -23,11 +24,28 @@ export default function Modal({ handleClick, setOpenModal, action }) {
       >
         <ModalText>{txtDefiner[action]?.children}</ModalText>
         <ModalButtonsContainer>
-          <ModalButton confirm={false} onClick={() => setOpenModal(false)}>
+          <ModalButton
+            disabled={loading}
+            confirm={false}
+            onClick={() => setOpenModal(false)}
+          >
             {txtDefiner[action]?.cancel}
           </ModalButton>
-          <ModalButton confirm={true} onClick={handleClick[action]}>
-            {txtDefiner[action]?.confirm}
+          <ModalButton
+            disabled={loading}
+            confirm={true}
+            onClick={handleClick[action]}
+          >
+            {loading ? (
+              <ReactLoading
+                type='bubbles'
+                color='#1877f2'
+                height={29}
+                width={123}
+              ></ReactLoading>
+            ) : (
+              txtDefiner[action]?.confirm
+            )}
           </ModalButton>
         </ModalButtonsContainer>
       </ModalContainer>
@@ -110,7 +128,7 @@ const ButtonConfirm = css`
   background: #ffffff;
   color: #1877f2;
 `;
-const ButtonDelete = css`
+const ButtonCancel = css`
   background: #1877f2;
   color: #ffffff;
 `;
@@ -124,14 +142,19 @@ const ModalButton = styled.button`
   font-size: 18px;
   line-height: 22px;
 
-  ${({ confirm }) => (confirm ? ButtonConfirm : ButtonDelete)}
+  ${({ confirm }) => (confirm ? ButtonConfirm : ButtonCancel)}
 
-  &:active {
+  &:active && &:not(:disabled) {
     transform: translateY(4px);
   }
 
   &:disabled {
-    opacity: 0.9;
+    opacity: 0.8;
     cursor: default;
+  }
+
+  svg {
+    height: 90px;
+    margin-top: -25%;
   }
 `;
