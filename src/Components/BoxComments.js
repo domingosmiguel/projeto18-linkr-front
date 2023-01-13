@@ -1,9 +1,9 @@
-import styled from 'styled-components';
 import axios from 'axios';
-import { FiSend } from 'react-icons/fi';
 import { useState } from 'react';
+import { FiSend } from 'react-icons/fi';
 import { ThreeDots } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 export default function BoxComments({
   open,
@@ -20,17 +20,14 @@ export default function BoxComments({
       Authorization: 'Bearer ' + localStorage.getItem('token'),
     },
   };
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
 
   function publishComment() {
     setDisabled(true);
     const body = { comment };
 
     axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/post-comment/${postId}`,
-        body,
-        config
-      )
+      .post(`${baseURL}/post-comment/${postId}`, body, config)
       .then((res) => {
         console.log(res.data);
         atualizarComments();
@@ -47,10 +44,7 @@ export default function BoxComments({
 
   function atualizarComments() {
     axios
-      .get(
-        `${process.env.REACT_APP_BACKEND_URL}/post-comment/${postId}`,
-        config
-      )
+      .get(`${baseURL}/post-comment/${postId}`, config)
       .then((res) => {
         setCommentId(res.data);
         setDisabled(false);
@@ -67,20 +61,20 @@ export default function BoxComments({
     <ContainerBoxComments open={open}>
       {commentId === '' ? (
         <ThreeDots
-          height="50"
-          width="50"
-          radius="9"
-          color="#353535"
-          ariaLabel="three-dots-loading"
+          height='50'
+          width='50'
+          radius='9'
+          color='#353535'
+          ariaLabel='three-dots-loading'
           wrapperStyle={{}}
-          wrapperClassName=""
+          wrapperClassName=''
           visible={true}
         />
       ) : (
         commentId.map((c) => (
           <BoxComment>
             <Comment>
-              <img alt="profile" src={c.pictureUrl} />
+              <img alt='profile' src={c.pictureUrl} />
               <TextComment>
                 <div>
                   <Link to={`/user/${c.postId}`}>
@@ -106,13 +100,13 @@ export default function BoxComments({
         <></>
       ) : (
         <WriteComment>
-          <img alt="profile" src={user.pictureUrl} />
+          <img alt='profile' src={user.pictureUrl} />
           <InputWrite>
             <input
               onChange={(e) => setComment(e.target.value)}
               value={comment}
-              type="text"
-              placeholder="write a comment..."
+              type='text'
+              placeholder='write a comment...'
               disabled={disabled}
             />
             <FiSend onClick={publishComment} />

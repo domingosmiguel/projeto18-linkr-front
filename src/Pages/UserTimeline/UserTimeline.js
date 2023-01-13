@@ -31,9 +31,11 @@ export default function UserTimeline({ config, deleteToken }) {
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
+
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
+      .get(`${baseURL}/user/${id}`, config)
       .then((res) => {
         setUser(res.data.user);
         setTimelinePosts(res.data.timelinePosts);
@@ -59,7 +61,7 @@ export default function UserTimeline({ config, deleteToken }) {
   useInterval(() => {
     axios
       .get(
-        `${process.env.REACT_APP_BACKEND_URL}/user/${id}/${
+        `${baseURL}/user/${id}/${
           timelinePosts.length
             ? timelinePosts[0].createdAt
             : new Date('1970-01-01 00:00:00').toISOString()
@@ -79,7 +81,7 @@ export default function UserTimeline({ config, deleteToken }) {
 
   function updateTimeline() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`, config)
+      .get(`${baseURL}/user/${id}`, config)
       .then((res) => {
         setTimelinePosts(res.data.timelinePosts);
         setHashtags(res.data.hashtags);
@@ -101,12 +103,7 @@ export default function UserTimeline({ config, deleteToken }) {
   }
   function getMorePosts() {
     axios
-      .get(
-        `${process.env.REACT_APP_BACKEND_URL}/user/${id}/${
-          timelinePosts.at(-1).createdAt
-        }`,
-        config
-      )
+      .get(`${baseURL}/user/${id}/${timelinePosts.at(-1).createdAt}`, config)
       .then((res) => {
         setTimelinePosts([...timelinePosts, ...res.data.timelinePosts]);
         setHasMore(res.data.hasMore);
@@ -166,7 +163,7 @@ export default function UserTimeline({ config, deleteToken }) {
           </ContainerImgNameUser>
           <NewPosts number={newPostsNumber} onClick={updateTimeline}>
             {newPostsNumber} new post{newPostsNumber > 1 && 's'}, load more!{' '}
-            <ion-icon name="refresh"></ion-icon>
+            <ion-icon name='refresh'></ion-icon>
           </NewPosts>
           {timelinePosts === '' ? (
             <Loading />
@@ -178,6 +175,8 @@ export default function UserTimeline({ config, deleteToken }) {
                 headers={config.headers}
                 user={user}
                 post={post}
+                displayedPosts={timelinePosts}
+                setDisplayedPosts={setTimelinePosts}
                 key={post.createdAt}
               />
             ))

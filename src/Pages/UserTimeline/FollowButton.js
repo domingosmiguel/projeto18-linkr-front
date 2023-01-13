@@ -65,7 +65,6 @@ export default function FollowButton({ headers }) {
         <ReactLoading
           type='bubbles'
           color={follow ? '#1877f2' : '#ffffff'}
-          height={29}
           width={100}
         ></ReactLoading>
       );

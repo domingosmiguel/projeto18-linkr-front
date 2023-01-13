@@ -79,10 +79,12 @@ export default function Hashtag({ config, deleteToken }) {
   const loaderRef = useRef(null);
   const navigate = useNavigate();
 
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
+
   useInterval(() => {
     axios
       .get(
-        `${process.env.REACT_APP_BACKEND_URL}/new-hashtag-posts/${hashtag}/${
+        `${baseURL}/new-hashtag-posts/${hashtag}/${
           posts.length
             ? posts[0].createdAt
             : new Date('1970-01-01 00:00:00').toISOString()
@@ -103,9 +105,7 @@ export default function Hashtag({ config, deleteToken }) {
   function getMorePosts() {
     axios
       .get(
-        `${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}/${
-          posts[posts.length - 1].createdAt
-        }`,
+        `${baseURL}/hashtag/${hashtag}/${posts[posts.length - 1].createdAt}`,
         config
       )
       .then((res) => {
@@ -147,7 +147,7 @@ export default function Hashtag({ config, deleteToken }) {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}`, config)
+      .get(`${baseURL}/hashtag/${hashtag}`, config)
       .then((res) => {
         setUser(res.data.user);
         setSessionId(res.data.sessionId);
@@ -170,7 +170,7 @@ export default function Hashtag({ config, deleteToken }) {
 
   function updateTimeline() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/hashtag/${hashtag}`, config)
+      .get(`${baseURL}/hashtag/${hashtag}`, config)
       .then((res) => {
         setPosts(res.data.posts);
         setHashtags(res.data.hashtags);
@@ -217,6 +217,8 @@ export default function Hashtag({ config, deleteToken }) {
                 headers={config.headers}
                 user={user}
                 post={p}
+                displayedPosts={posts}
+                setDisplayedPosts={setPosts}
                 key={p.createdAt}
               />
             ))
